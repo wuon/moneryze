@@ -5,6 +5,7 @@ const xml = require('xml2js')
 const request = require('request-promise')
 const Promise = require('bluebird');
 var $q = require('q');//yes using two promise libraries, but will replace bluebird with q soon.
+const numeral = require('numeral');
 Promise.promisifyAll(xml)
 
 // Globals (from Moneris PHP API)
@@ -81,17 +82,17 @@ module.exports = function(credentials){
   };
   var pay = function(args){
     var pan = cleanse(args.card);
-    var expdate = cleanse(args.expiry);
-    var amount = cleanse(args.amount);
+    var expdate = cleanse(args.expiry,true);
+    //--Moneris is super picky about formating..
+    var amount = (args.amount ? numeral(args.amount).format('0,0.00'): false);
+    //
     var suffix = (new Date()).getTime()+'-'+Math.ceil(Math.random()*10000);
     var order_id = args.order_id || cleanse(credentials.app_name,true)+'-Purchase-'+suffix;
     var cust_id = args.cust_id || 'customer-'+suffix;
     var dynamic_descriptor = args.description || args.dynamic_descriptor || 'purchase';
     if(credentials.test){
-      console.log('Order_id (default) format: <APP-NAME>-Purchase-<UNIX-MS-TIME>-<RAND-NUMBER>');
-      console.log('Cust_id (default) format: customer-<UNIX-MS-TIME>-<RAND-NUMBER>');
-      console.log('Defaulting to order_id: '+order_id);
-      console.log('Defaulting to cust_id: '+cust_id);
+      console.log('--Defaulting to order_id: '+order_id);
+      console.log('--Defaulting to cust_id: '+cust_id);
     }
     var purchase = {
         type: 'purchase',
@@ -104,30 +105,41 @@ module.exports = function(credentials){
         dynamic_descriptor,
         status_check: false
     };
-    console.log(purchase);
-    return send(purchase)
-    .then(function(result){
-        var code = result.ResponseCode[0];
-        var status = {
-            msg: cleanse(result.Message),
-            code,
-            reference: result.ReferenceNum[0],
-            iso: result.ISO[0],
-            receipt: result.ReceiptId[0],
-            raw: result
-        };
-        var approved =  (code || code===0 ? parseInt(code)<50 : false );
-        return $q.fcall(function(){
-            if(approved){
-                return status;
-            }
-            else {
-                throw {
-                    code: status.code,
-                    msg: status.msg
-                }
-            }
-        })
+    return $q.fcall(function(){
+      if(!amount || !pan || !expdate){
+        throw {
+          code: null,
+          msg: 'Missing creditcard number, expiry, or invalid amount.'
+        }
+      }
+      return send(purchase)
+      .then(function(result){
+          var code = result.ResponseCode[0];
+          var status = {
+              msg: cleanse(result.Message),
+              code,
+              reference: result.ReferenceNum[0],
+              iso: result.ISO[0],
+              receipt: result.ReceiptId[0],
+              raw: result,
+              isVisa: result.CardType[0]=="V",
+              isMasterCard: result.CardType[0]=="M",
+              isVisaDebit: result.IsVisaDebit[0] && true,
+              authCode: result.AuthCode[0]
+          };
+          var approved =  (code ? parseInt(code)<50 : false );
+          return $q.fcall(function(){
+              if(approved){
+                  return status;
+              }
+              else {
+                  throw {
+                      code: status.code,
+                      msg: status.msg
+                  }
+              }
+          })
+      })
     })
   };
   return { send, pay }

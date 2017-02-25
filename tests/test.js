@@ -9,4 +9,4 @@ test('empty parameters', t => {
 
 test('invalid country code parameters', t => {
   return t.shouldFail(moneris.send({ type: 'purchase' }), TypeError)
-})
+});

@@ -8,16 +8,18 @@ var moneris = require('../index')({
 })
 
 moneris.pay({
-    amount: '1.00',
+    amount: (5.99*2), // we handle formatting for you, you just do your math.
     card: '4242424242424242',
     expiry: '20/11',
-    description: 'Booking'
+    description: 'Two drinks'
 }).then((result)=>{ //APPROVED
   console.log('--APROVED');
   console.log('Message: '+result.msg);
   console.log('Receipt: '+result.receipt);
   console.log('ISO: '+result.iso);
-  console.log('Reference Number: '+result./// <reference path="" />);
+  console.log('Reference Number: '+result.reference);
+  console.log('Raw Response:');
+  console.log(result.raw);
 })
 .catch((err)=>{ //DECLINED
   console.log('--DECLINED');
