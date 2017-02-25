@@ -2,8 +2,7 @@
 
 > A wrapper to access the Moneris API, forked from shaynair's great work (shaynair/moneris-js)
 
-[![NPM version](https://badge.fury.io/js/moneris.svg)](http://badge.fury.io/js/moneris) [![Build Status](https://travis-ci.org/shaynair/moneris-js.svg?branch=master)](https://travis-ci.org/shaynair/moneris-js?branch=master)
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+> The hope for this module is to create clean, robust, promise wrapped queries that extend just beyond payments, shaynair's work supports for generalized queries to Moneris however, the hope is to have more examples and handling of imperfect formatting. 
 
 [Installation](#installation) |
 [Usage](#usage) |
