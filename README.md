@@ -1,6 +1,6 @@
 # node-moneris
 
-> A wrapper to access the Moneris API.
+> A wrapper to access the Moneris API, forked from shaynair's great work (shaynair/moneris-js)
 
 [![NPM version](https://badge.fury.io/js/moneris.svg)](http://badge.fury.io/js/moneris) [![Build Status](https://travis-ci.org/shaynair/moneris-js.svg?branch=master)](https://travis-ci.org/shaynair/moneris-js?branch=master)
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
@@ -15,14 +15,14 @@
 With [npm](https://npmjs.org/):
 
 ```bash
-npm install moneris --save
+npm install moneris-node --save
 ```
 
 Note: You need **an engine that supports ES6 (e.g. Babel or Node 4.0+)**.
 
 ## Usage
 
-**`moneris(credentials, req[, extended])`**
+**`moneris.send(req[, extended])`**
 
 Queries the Moneris API with the information provided.
 
@@ -37,7 +37,34 @@ Queries the Moneris API with the information provided.
 
 ## Example
 
-See `tests/testPurchase.js`
+``
+var moneris = require('../index')({
+  app_name: 'Alejandros Alcohol Delivery',
+  store_id: 'store5',
+  api_token: 'yesguy',
+  test: true
+})
+
+moneris.pay({
+    amount: (5.99*2), // we handle formatting for you, you just do your math.
+    card: '4242424242424242',
+    expiry: '20/11',
+    description: 'Two drinks'
+}).then((result)=>{ //APPROVED
+  console.log('--APROVED');
+  console.log('Message: '+result.msg);
+  console.log('Receipt: '+result.receipt);
+  console.log('ISO: '+result.iso);
+  console.log('Reference Number: '+result.reference);
+  console.log('Raw Response:');
+  console.log(result.raw);
+})
+.catch((err)=>{ //DECLINED
+  console.log('--DECLINED');
+  console.log('Message: '+err.message);
+  console.log('Code: '+err.code);
+})
+``
 
 ## License
 
