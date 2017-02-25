@@ -38,8 +38,8 @@ Queries the Moneris API with the information provided.
 ## Example
 
 ```bash
-var moneris = require('../index')({
-  app_name: 'Alejandros Alcohol Delivery',
+var moneris = require('moneris-node')({
+  app_name: 'Alejandros Food Delivery',
   store_id: 'store5',
   api_token: 'yesguy',
   test: true
