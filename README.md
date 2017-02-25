@@ -19,6 +19,17 @@ npm install moneris-node --save
 
 Note: You need **an engine that supports ES6 (e.g. Babel or Node 4.0+)**.
 
+## General Usage
+
+**`require('moneris-node')(credentials)`**
+
+Queries the Moneris API with the information provided.
+
+- `credentials`: **Required.** An object with the following fields.
+  - `api_token`: **Required.** Your API token.
+  - `store_id`: **Required.** Your store ID.
+  - `test`: Optional. If true, uses Moneris Test endpoints. You can get a `api_token` and `store_id` for this endpoint from Moneris's Documentation. `false` by default.
+
 ## Example
 
 We handle amount formatting for you, you just do your math.
@@ -57,12 +68,6 @@ moneris.pay({
 
 **`moneris.send(req[, extended])`**
 
-Queries the Moneris API with the information provided.
-
-- `credentials`: **Required.** An object with the following fields.
-  - `api_token`: **Required.** Your API token.
-  - `store_id`: **Required.** Your store ID.
-  - `test`: Optional. If true, uses Moneris Test endpoints. You can get a `api_token` and `store_id` for this endpoint from Moneris's Documentation. `false` by default.
 - `req`: **Required.** An object with the following fields.
   - `type`: **Required.** The type of the request you wish to post.
   - ...All other fields that pertain to that type of request.
