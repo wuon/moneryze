@@ -37,7 +37,7 @@ Queries the Moneris API with the information provided.
 
 ## Example
 
-``
+```bash
 var moneris = require('../index')({
   app_name: 'Alejandros Alcohol Delivery',
   store_id: 'store5',
@@ -64,7 +64,7 @@ moneris.pay({
   console.log('Message: '+err.message);
   console.log('Code: '+err.code);
 })
-``
+```
 
 ## License
 
