@@ -124,10 +124,16 @@ module.exports = function(credentials){
               raw: result,
               isVisa: result.CardType[0]=="V",
               isMasterCard: result.CardType[0]=="M",
-              isVisaDebit: result.IsVisaDebit[0] && true,
-              authCode: result.AuthCode[0]
+              isVisaDebit: result.IsVisaDebit[0] == "true",
+              isCorporateCard: result.CorporateCard[0] == "true",
+              authCode: result.AuthCode[0],
+              timeout: result.TimedOut[0]=="true",
+              date: result.TransDate[0],
+              time: result.TransTime[0],
+              custId: cust_id,
+              orderId: order_id
           };
-          var approved =  (code ? parseInt(code)<50 : false );
+          var approved =  !status.timeout && (code ? parseInt(code)<50 : false );
           return $q.fcall(function(){
               if(approved){
                   return status;
@@ -135,7 +141,7 @@ module.exports = function(credentials){
               else {
                   throw {
                       code: status.code,
-                      msg: status.msg
+                      msg: (status.timeout ? 'TIMEOUT': status.msg)
                   }
               }
           })

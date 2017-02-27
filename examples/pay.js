@@ -1,7 +1,7 @@
 'use strict'
 
 var moneris = require('../index')({
-  app_name: 'Alejandros Alcohol Delivery',
+  app_name: 'Alejandros Food Delivery',
   store_id: 'store5',
   api_token: 'yesguy',
   test: true
@@ -13,13 +13,10 @@ moneris.pay({
     expiry: '20/11',
     description: 'Two drinks'
 }).then((result)=>{ //APPROVED
-  console.log('--APROVED');
-  console.log('Message: '+result.msg);
-  console.log('Receipt: '+result.receipt);
-  console.log('ISO: '+result.iso);
-  console.log('Reference Number: '+result.reference);
-  console.log('Raw Response:');
-  console.log(result.raw);
+  result.raw = undefined;//comment out if you want the raw response.
+  console.log('--');
+  console.log('Clean Response:');
+  console.log(result)
 })
 .catch((err)=>{ //DECLINED
   console.log('--DECLINED');
