@@ -80,6 +80,8 @@ module.exports = function(credentials){
           .then(res => xml.parseStringAsync(res))
           .then(res => Array.isArray(res.response.receipt) ? res.response.receipt[0] : res.response.receipt)
   };
+
+  //Check out -> https://developer.moneris.com/More/Testing/Penny%20Value%20Simulator , for more "magic" amounts to force different responses.
   var pay = function(args){
     var pan = cleanse(args.card);
     var expdate = cleanse(args.expiry,true);
