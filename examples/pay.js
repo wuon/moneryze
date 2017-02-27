@@ -11,15 +11,18 @@ moneris.pay({
     amount: (5.99*2), // we handle formatting for you, you just do your math.
     card: '4242424242424242',
     expiry: '20/11',
-    description: 'Two drinks'
+    description: 'Two drinks',
+    //forceDecline: true, //uncomment this if you want to test declined card (test must be equal to true in credentials)
 }).then((result)=>{ //APPROVED
   result.raw = undefined;//comment out if you want the raw response.
   console.log('--');
-  console.log('Clean Response:');
+  console.log('Clean Response (passed):');
   console.log(result)
 })
 .catch((err)=>{ //DECLINED
-  console.log('--DECLINED');
-  console.log('Message: '+err.message);
-  console.log('Code: '+err.code);
+  //err.raw = undefined;//comment out if you want the raw response.
+  console.log('--');
+  console.log('Clean Response (failed):');
+  console.log(err);
+  //console.log(err.raw);
 })

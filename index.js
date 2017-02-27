@@ -83,8 +83,12 @@ module.exports = function(credentials){
   var pay = function(args){
     var pan = cleanse(args.card);
     var expdate = cleanse(args.expiry,true);
+    var amount = args.amount;
     //--Moneris is super picky about formating..
-    var amount = (args.amount ? numeral(args.amount).format('0,0.00'): false);
+    if(args.forceDecline && credentials.test){
+      amount = 0.05;
+    }
+     amount = (amount ? numeral(amount).format('0,0.00'): false)
     //
     var suffix = (new Date()).getTime()+'-'+Math.ceil(Math.random()*10000);
     var order_id = args.order_id || cleanse(credentials.app_name,true)+'-Purchase-'+suffix;
@@ -109,14 +113,14 @@ module.exports = function(credentials){
       if(!amount || !pan || !expdate){
         throw {
           code: null,
-          msg: 'Missing creditcard number, expiry, or invalid amount.'
+          msg: 'INVALID_INPUTS'
         }
       }
       return send(purchase)
       .then(function(result){
           var code = result.ResponseCode[0];
           var status = {
-              msg: cleanse(result.Message),
+              msg: cleanse(result.Message[0]),
               code,
               reference: result.ReferenceNum[0],
               iso: result.ISO[0],
@@ -133,7 +137,7 @@ module.exports = function(credentials){
               custId: cust_id,
               orderId: order_id
           };
-          var approved =  !status.timeout && (code ? parseInt(code)<50 : false );
+          var approved =  !status.timeout && ((code)=="00" || code ? parseInt(code)<50 : false );
           return $q.fcall(function(){
               if(approved){
                   return status;
@@ -141,7 +145,8 @@ module.exports = function(credentials){
               else {
                   throw {
                       code: status.code,
-                      msg: (status.timeout ? 'TIMEOUT': status.msg)
+                      msg: (status.timeout ? 'TIMEOUT': status.msg) || 'DECLINED',
+                      raw: result
                   }
               }
           })
