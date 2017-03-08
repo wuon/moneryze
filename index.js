@@ -132,7 +132,6 @@ module.exports = function(credentials){
               isVisa: result.CardType[0]=="V",
               isMasterCard: result.CardType[0]=="M",
               isVisaDebit: result.IsVisaDebit[0] == "true",
-              isCorporateCard: result.CorporateCard[0] == "true",
               authCode: result.AuthCode[0],
               timeout: result.TimedOut[0]=="true",
               date: result.TransDate[0],
