@@ -120,6 +120,7 @@ module.exports = function(credentials){
       }
       return send(purchase)
       .then(function(result){
+          console.log(result);
           var code = result.ResponseCode[0];
           var status = {
               msg: cleanse(result.Message[0]),
