@@ -82,8 +82,12 @@ module.exports = function(credentials){
   };
 
   //Check out -> https://developer.moneris.com/More/Testing/Penny%20Value%20Simulator , for more "magic" amounts to force different responses.
+
+  var firstElement = function(arr,assertion){
+    return Array.isArray(arr) && arr.length>0 && arr[0] ? (assertion ? arr[0]===assertion: arr[0]) : null;
+  }
   var pay = function(args){
-    var pan = cleanse(args.card);
+    var pan = cleanse(args.card,true);
     var expdate = cleanse(args.expiry,true);
     var amount = args.amount;
     //--Moneris is super picky about formating..
@@ -121,21 +125,22 @@ module.exports = function(credentials){
       return send(purchase)
       .then(function(result){
           console.log(result);
-          var code = result.ResponseCode[0];
+          var fe = firstElement; //shorthand
+          var code = fe(result.ResponseCode);
           var status = {
-              msg: cleanse(result.Message[0]),
+              msg: cleanse(fe(result.Message)),
               code,
-              reference: result.ReferenceNum[0],
-              iso: result.ISO[0],
-              receipt: result.ReceiptId[0],
+              reference: fe(result.ReferenceNum),
+              iso: fe(result.ISO),
+              receipt: fe(result.ReceiptId),
               raw: result,
-              isVisa: result.CardType[0]=="V",
-              isMasterCard: result.CardType[0]=="M",
-              isVisaDebit: result.IsVisaDebit[0] == "true",
-              authCode: result.AuthCode[0],
-              timeout: result.TimedOut[0]=="true",
-              date: result.TransDate[0],
-              time: result.TransTime[0],
+              isVisa: fe(result.CardType,"V"),
+              isMasterCard: fe(result.CardType,"M"),
+              isVisaDebit: fe(result.IsVisaDebit,"true"),
+              authCode: fe(result.AuthCode),
+              timeout: fe(result.TimedOut,"true"),
+              date: fe(result.TransDate),
+              time: fe(result.TransTime),
               custId: cust_id,
               orderId: order_id
           };
