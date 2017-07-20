@@ -94,7 +94,7 @@ module.exports = function(credentials){
     if(args.forceDecline && credentials.test){
       amount = 0.05;
     }
-     amount = (amount ? numeral(amount).format('0,0.00'): false)
+     amount = (amount ? numeral(amount).format('0.00'): false)
     //
     var suffix = (new Date()).getTime()+'-'+Math.ceil(Math.random()*10000);
     var order_id = args.order_id || cleanse(credentials.app_name,true)+'-Purchase-'+suffix;
