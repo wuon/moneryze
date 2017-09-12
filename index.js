@@ -22,23 +22,23 @@ var cleanse = function(str,spaces){
   }
   return (str ? String(str).split('/').join('').split('=').join('').split('*').join('').split('!').join('').split('-').join('').trim() : '');
 };
-module.exports = function(credentials){
+module.exports = function(configuration){
   function send (req, extended) {
     if(extended === undefined) {
       extended = null;
     }
-    if (!credentials || !req || !req.type || !credentials.store_id || !credentials.api_token) {
+    if (!configuration || !req || !req.type || !configuration.store_id || !configuration.api_token) {
       return Promise.reject(new TypeError('Requires country_code, store_id, api_token'))
     }
-    if (credentials.country_code) {
-      credentials.country_code = credentials.country_code.toUpperCase()
-      if (credentials.country_code !== 'CA' && !globals.hasOwnProperty(credentials.country_code + '_HOST')) {
+    if (configuration.country_code) {
+      configuration.country_code = configuration.country_code.toUpperCase()
+      if (configuration.country_code !== 'CA' && !globals.hasOwnProperty(configuration.country_code + '_HOST')) {
         return Promise.reject(new TypeError('Invalid country code'))
       }
     }
     let data = {
-      store_id: credentials.store_id,
-      api_token: credentials.api_token
+      store_id: configuration.store_id,
+      api_token: configuration.api_token
     }
     if (req.type === 'attribute_query' || req.type === 'session_query') {
       data.risk = {}
@@ -54,12 +54,12 @@ module.exports = function(credentials){
       }
     }
     let prefix = ''
-    if (!!credentials.country_code && credentials.country_code !== 'CA') {
-      prefix += credentials.country_code + '_'
+    if (!!configuration.country_code && configuration.country_code !== 'CA') {
+      prefix += configuration.country_code + '_'
     }
     let hostPrefix = prefix
     let filePrefix = prefix
-    if (credentials.test) {
+    if (configuration.test) {
       hostPrefix += 'TEST_'
     }
     if (req.type === 'acs' || req.type === 'txn') {
@@ -86,24 +86,29 @@ module.exports = function(credentials){
   var firstElement = function(arr,assertion){
     return Array.isArray(arr) && arr.length>0 && arr[0] ? (assertion ? arr[0]===assertion: arr[0]) : null;
   }
+  var normalizeExpiry = function(format,expiry){
+    if(typeof format==='string' && format.toLowerCase().split('/').join('')==='mmyy'){
+      return expiry.toString().split('').slice(2,4).join('')+expiry.toString().split('').slice(0,2).join('');
+    }
+    else {
+      return expiry;
+    }
+  }
   var pay = function(args){
     var pan = cleanse(args.card,true);
-    var expdate = cleanse(args.expiry,true);
+    //Moneris takes expiry date format YY/MM, however most websites use the MM/YY format, you can specificy this in a verbose manner in the configuration by setting configuration.expiryFormat = 'MM/YY'; or the default 'YY/MM';
+    var expdate = normalizeExpiry(configuration.expiryFormat,cleanse(args.expiry,true));
     var amount = args.amount;
     //--Moneris is super picky about formating..
-    if(args.forceDecline && credentials.test){
+    if(args.forceDecline && configuration.test){
       amount = 0.05;
     }
      amount = (amount ? numeral(amount).format('0.00'): false)
     //
     var suffix = (new Date()).getTime()+'-'+Math.ceil(Math.random()*10000);
-    var order_id = args.order_id || cleanse(credentials.app_name,true)+'-Purchase-'+suffix;
+    var order_id = args.order_id || cleanse(configuration.app_name,true)+'-Purchase-'+suffix;
     var cust_id = args.cust_id || 'customer-'+suffix;
     var dynamic_descriptor = args.description || args.dynamic_descriptor || 'purchase';
-    if(credentials.test){
-      console.log('--Defaulting to order_id: '+order_id);
-      console.log('--Defaulting to cust_id: '+cust_id);
-    }
     var purchase = {
         type: 'purchase',
         cust_id,
@@ -124,7 +129,6 @@ module.exports = function(credentials){
       }
       return send(purchase)
       .then(function(result){
-          console.log(result);
           var fe = firstElement; //shorthand
           var code = fe(result.ResponseCode);
           var status = {
