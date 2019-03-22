@@ -3,13 +3,13 @@
 const moneris = require('../index');
 
 moneris.init({
-  app_name: 'Alejandros Food Delivery',
-  store_id: 'store3',
+  app_name: 'Test',
+  store_id: 'store5',
   api_token: 'yesguy',
   test: true,
 });
 
-moneris.pay({
+moneris.purchaseCC({
     amount: (5.99*2), // we handle formatting for you, you just do your math.
     card: '4242424242424242',
     expiry: '20/11',
