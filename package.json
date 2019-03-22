@@ -3,16 +3,25 @@
   "version": "1.0.11",
   "description": "Node / promise wrapped API for Moneris' Transactions API",
   "main": "index.js",
+  "scripts": {
+    "lint": "eslint"
+  },
   "repository": "https://github.com/AlejandroEsquivel/moneris-js",
   "author": "dralejandro604@gmail.com",
   "license": "MIT",
   "dependencies": {
     "blue-tape": "^1.0.0",
     "bluebird": "^3.4.7",
+    "eslint-config-airbnb": "^17.1.0",
     "numeral": "^2.0.4",
     "q": "^1.4.1",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
   }
 }

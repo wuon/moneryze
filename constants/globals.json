@@ -11,6 +11,6 @@
     "MPI_FILE": "/mpi/servlet/MpiServlet",
     "US_MPI_FILE": "/mpi/servlet/MpiServlet",
 
-    "API_VERSION": "PHP NA - 1.0.5",
+    "API_VERSION": "PHP NA - 1.2.3",
     "CLIENT_TIMEOUT": 30
 }

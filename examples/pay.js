@@ -1,11 +1,13 @@
 'use strict'
 
-var moneris = require('../index')({
+const moneris = require('../index');
+
+moneris.init({
   app_name: 'Alejandros Food Delivery',
-  store_id: 'store5',
+  store_id: 'store3',
   api_token: 'yesguy',
-  test: true
-})
+  test: true,
+});
 
 moneris.pay({
     amount: (5.99*2), // we handle formatting for you, you just do your math.
