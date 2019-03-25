@@ -11,6 +11,9 @@ xmlBuilder.options.rootName = 'request';
 
 let config;
 
+const filter = new Set(['res_lookup_masked', 'res_delete']);
+const sudo = new Set(['res_lookup_masked']);
+
 const cleanse = (str, spaces) => {
   let s = str;
   if (spaces) {
@@ -132,7 +135,7 @@ const send = async (data, type) => {
   }
   const suffix = `${(new Date()).getTime()}-${Math.ceil(Math.random() * 10000)}`;
   const out = data;
-  if (type !== 'res_lookup_masked') {
+  if (!filter.has(type)) {
     out.crypt_type = data.crypt_type || config.crypt_type;
     out.order_id = out.order_id || `${cleanse(config.app_name, true)}-Purchase-${suffix}`;
   }
@@ -188,7 +191,7 @@ const send = async (data, type) => {
   const response = await axios(options);
   const xmlify = await xml.parseStringAsync(response.data);
   const receipt = Array.isArray(xmlify.response.receipt) ? xmlify.response.receipt[0] : xmlify.response.receipt;
-  return format(receipt, type !== 'res_lookup_masked');
+  return format(receipt, !sudo.has(type));
 };
 
 module.exports.init = (configuration) => {
@@ -207,6 +210,7 @@ module.exports.init = (configuration) => {
 };
 
 module.exports.resAddCC = data => send(data, 'res_add_cc');
+module.exports.resDeleteCC = data => send(data, 'res_delete');
 module.exports.resPurchaseCC = data => send(data, 'res_purchase_cc');
 module.exports.resPreauthCC = data => send(data, 'res_preauth_cc');
 module.exports.resLookupMasked = data => send(data, 'res_lookup_masked');

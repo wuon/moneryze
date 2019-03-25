@@ -75,3 +75,19 @@ moneris.resLookupMasked({
     console.log(err);
     // console.log(err.raw);
   });
+
+moneris.resDeleteCC({
+  token: 'umYoVyY4DqZPv2i1mp91JlLy2',
+  // forceDecline: true, //uncomment this if you want to test declined card (test must be equal to true in credentials)
+}).then((result) => { // APPROVED
+  console.log('--');
+  console.log('Clean Response (passed):');
+  console.log(result);
+})
+  .catch((err) => { // DECLINED
+    // err.raw = undefined;//comment out if you want the raw response.
+    console.log('--');
+    console.log('Clean Response (failed):');
+    console.log(err);
+    // console.log(err.raw);
+  });

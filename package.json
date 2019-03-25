@@ -1,13 +1,13 @@
 {
-  "name": "moneris-node",
-  "version": "1.0.11",
+  "name": "moneryze",
+  "version": "1.0.0",
   "description": "Node / promise wrapped API for Moneris' Transactions API",
   "main": "index.js",
   "scripts": {
     "lint": "eslint"
   },
-  "repository": "https://github.com/AlejandroEsquivel/moneris-js",
-  "author": "dralejandro604@gmail.com",
+  "repository": "https://github.com/Wuon/moneryze",
+  "author": "wuon@protonmail.com",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
