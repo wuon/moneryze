@@ -38,7 +38,7 @@ const normalizeExpiry = (format, expiry) => {
   return expiry;
 };
 
-const format = (data) => {
+const format = (data, sanitize = True) => {
   const o = {};
   const reference = fe(data.ReferenceNum);
   const dataKey = fe(data.DataKey);
@@ -59,6 +59,8 @@ const format = (data) => {
   const resSuccess = fe(data.ResSuccess, 'true');
   const corporateCard = fe(data.CorporateCard, 'true');
   const recurSuccess = fe(data.RecurSuccess, 'true');
+  const resolveData = fe(data.ResolveData);
+  const maskedPan = resolveData ? fe(resolveData.masked_pan) : null;
   if (reference && reference !== 'null') {
     o.reference = reference;
   }
@@ -112,6 +114,9 @@ const format = (data) => {
   }
   if (type && type !== 'null') {
     o.type = type;
+  }
+  if (maskedPan && maskedPan !== 'null' && !sanitize) {
+    o.maskedPan = maskedPan;
   }
   return {
     isSuccess: !fe(data.TimedOut, 'true') && ((code) === '00' || code ? parseInt(code, 10) < 50 : false),
@@ -183,7 +188,7 @@ const send = async (data, type) => {
   const response = await axios(options);
   const xmlify = await xml.parseStringAsync(response.data);
   const receipt = Array.isArray(xmlify.response.receipt) ? xmlify.response.receipt[0] : xmlify.response.receipt;
-  return format(receipt);
+  return format(receipt, type !== 'res_lookup_masked');
 };
 
 module.exports.init = (configuration) => {
