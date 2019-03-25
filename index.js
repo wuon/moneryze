@@ -1,6 +1,5 @@
 const xml = require('xml2js');
 const Promise = require('bluebird');
-const numeral = require('numeral');
 const axios = require('axios');
 
 Promise.promisifyAll(xml);
@@ -29,8 +28,8 @@ const cleanse = (str, spaces) => {
 };
 
 /* eslint-disable-next-line no-nested-ternary */
-const firstElement = (arr, assertion) => (Array.isArray(arr) && arr.length > 0
-  && arr[0] ? (assertion ? arr[0] === assertion : arr[0]) : null);
+const fe = (arr, assertion) => (Array.isArray(arr) && arr.length > 0 && arr[0] !== 'null'
+      && arr[0] ? (assertion ? arr[0] === assertion : arr[0]) : null);
 
 const normalizeExpiry = (format, expiry) => {
   if (typeof format === 'string' && format.toLowerCase().split('/').join('') === 'mmyy') {
@@ -40,31 +39,85 @@ const normalizeExpiry = (format, expiry) => {
 };
 
 const format = (data) => {
-  const fe = firstElement; // shorthand
+  const o = {};
+  const reference = fe(data.ReferenceNum);
+  const dataKey = fe(data.DataKey);
+  const iso = fe(data.ISO);
+  const receipt = fe(data.ReceiptId);
+  const isVisa = fe(data.CardType, 'V');
+  const isMasterCard = fe(data.CardType, 'M');
+  const isVisaDebit = fe(data.IsVisaDebit, 'true');
   const code = fe(data.ResponseCode);
-  const status = {
-    msg: cleanse(fe(data.Message)),
-    code,
-    reference: fe(data.ReferenceNum),
-    iso: fe(data.ISO),
-    receipt: fe(data.ReceiptId),
-    isVisa: fe(data.CardType, 'V'),
-    isMasterCard: fe(data.CardType, 'M'),
-    isVisaDebit: fe(data.IsVisaDebit, 'true'),
-    authCode: fe(data.AuthCode),
-    timeout: fe(data.TimedOut, 'true'),
-    date: fe(data.TransDate),
-    time: fe(data.TransTime),
-    dataKey: fe(data.DataKey),
-  };
-  const approved = !status.timeout && ((code) === '00' || code ? parseInt(code, 10) < 50 : false);
-  if (approved) {
-    return status;
+  const authCode = fe(data.AuthCode);
+  const date = fe(data.TransDate);
+  const time = fe(data.TransTime);
+  const amount = fe(data.TransAmount);
+  const id = fe(data.TransID);
+  const type = fe(data.TransType);
+  const isComplete = fe(data.Complete, 'true');
+  const payment = fe(data.PaymentType);
+  const resSuccess = fe(data.ResSuccess, 'true');
+  const corporateCard = fe(data.CorporateCard, 'true');
+  const recurSuccess = fe(data.RecurSuccess, 'true');
+  if (reference && reference !== 'null') {
+    o.reference = reference;
+  }
+  if (dataKey && dataKey !== 'null') {
+    o.dataKey = dataKey;
+  }
+  if (iso && iso !== 'null') {
+    o.iso = iso;
+  }
+  if (receipt && receipt !== 'null') {
+    o.receipt = receipt;
+  }
+  if (isVisa !== null && isVisa !== 'null') {
+    o.isVisa = isVisa;
+  }
+  if (isMasterCard !== null && isMasterCard !== 'null') {
+    o.isMasterCard = isMasterCard;
+  }
+  if (isVisaDebit !== null && isVisaDebit !== 'null') {
+    o.isVisaDebit = isVisaDebit;
+  }
+  if (authCode && authCode !== 'null') {
+    o.authCode = authCode;
+  }
+  if (date && date !== 'null') {
+    o.date = date;
+  }
+  if (time && time !== 'null') {
+    o.time = time;
+  }
+  if (isComplete !== null && isComplete !== 'null') {
+    o.isComplete = isComplete;
+  }
+  if (payment && payment !== 'null') {
+    o.payment = payment;
+  }
+  if (resSuccess !== null && resSuccess !== 'null') {
+    o.resSuccess = resSuccess;
+  }
+  if (recurSuccess !== null && recurSuccess !== 'null') {
+    o.recurSuccess = recurSuccess;
+  }
+  if (corporateCard !== null && corporateCard !== 'null') {
+    o.corporateCard = corporateCard;
+  }
+  if (amount && amount !== 'null') {
+    o.amount = amount;
+  }
+  if (id && id !== 'null') {
+    o.id = id;
+  }
+  if (type && type !== 'null') {
+    o.type = type;
   }
   return {
-    code: status.code,
-    msg: (status.timeout ? 'TIMEOUT' : status.msg) || 'DECLINED',
-    raw: data,
+    isSuccess: !fe(data.TimedOut, 'true') && ((code) === '00' || code ? parseInt(code, 10) < 50 : false),
+    code,
+    msg: (o.timeout ? 'TIMEOUT' : cleanse(fe(data.Message))) || 'ERROR',
+    data: o,
   };
 };
 
@@ -72,14 +125,27 @@ const send = async (data, type) => {
   if (!config || !config.store_id || !config.api_token) {
     return Promise.reject(new Error('configuration not initialized'));
   }
-  const out = {};
+  const suffix = `${(new Date()).getTime()}-${Math.ceil(Math.random() * 10000)}`;
+  const out = data;
   out.crypt_type = data.crypt_type || config.crypt_type;
-  if (data.pan) {
+  if (out.forceDecline && out.test) {
+    out.amount = 0.05;
+  }
+  if (out.pan) {
     out.pan = cleanse(data.pan, true);
   }
-  if (data.expdate) {
+  if (out.expdate) {
     out.expdate = normalizeExpiry(config.expiryFormat, cleanse(data.expdate, true));
   }
+  if (out.description) {
+    out.dynamic_descriptor = out.description || out.dynamic_descriptor || type;
+    delete out.description;
+  }
+  if (out.token) {
+    out.data_key = out.token;
+    delete out.token;
+  }
+  out.order_id = out.order_id || `${cleanse(config.app_name, true)}-Purchase-${suffix}`;
   const body = {
     store_id: config.store_id,
     api_token: config.api_token,
@@ -134,3 +200,4 @@ module.exports.init = (configuration) => {
 };
 
 module.exports.resAddCC = data => send(data, 'res_add_cc');
+module.exports.resPurchaseCC = data => send(data, 'res_purchase_cc');

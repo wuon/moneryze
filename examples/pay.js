@@ -8,7 +8,7 @@ moneris.init({
   test: true,
 });
 
-
+/*
 moneris.resAddCC({
   pan: '4242424242424242',
   expdate: '2011',
@@ -24,19 +24,17 @@ moneris.resAddCC({
     console.log(err);
     // console.log(err.raw);
   });
+  */
 
-
-/*
-moneris.purchaseCC({
+moneris.resPurchaseCC({
   amount: (5.99 * 2), // we handle formatting for you, you just do your math.
-  card: '4242424242424242',
-  expiry: '20/11',
+  token: 'umYoVyY4DqZPv2i1mp91JlLy2',
   description: 'Two drinks',
   // forceDecline: true, //uncomment this if you want to test declined card (test must be equal to true in credentials)
 }).then((result) => { // APPROVED
   console.log('--');
   console.log('Clean Response (passed):');
-  console.log(result.msg);
+  console.log(result);
 })
   .catch((err) => { // DECLINED
   // err.raw = undefined;//comment out if you want the raw response.
@@ -45,4 +43,3 @@ moneris.purchaseCC({
     console.log(err);
   // console.log(err.raw);
   });
-*/
