@@ -26,10 +26,8 @@ moneris.resAddCC({
   });
   */
 
-moneris.resPreauthCC({
-  amount: (5.99 * 2), // we handle formatting for you, you just do your math.
+moneris.resLookupMasked({
   token: 'umYoVyY4DqZPv2i1mp91JlLy2',
-  description: 'Two drinks',
   // forceDecline: true, //uncomment this if you want to test declined card (test must be equal to true in credentials)
 }).then((result) => { // APPROVED
   console.log('--');

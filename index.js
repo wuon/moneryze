@@ -127,7 +127,10 @@ const send = async (data, type) => {
   }
   const suffix = `${(new Date()).getTime()}-${Math.ceil(Math.random() * 10000)}`;
   const out = data;
-  out.crypt_type = data.crypt_type || config.crypt_type;
+  if (type !== 'res_lookup_masked') {
+    out.crypt_type = data.crypt_type || config.crypt_type;
+    out.order_id = out.order_id || `${cleanse(config.app_name, true)}-Purchase-${suffix}`;
+  }
   if (out.forceDecline && out.test) {
     out.amount = 0.05;
   }
@@ -145,7 +148,6 @@ const send = async (data, type) => {
     out.data_key = out.token;
     delete out.token;
   }
-  out.order_id = out.order_id || `${cleanse(config.app_name, true)}-Purchase-${suffix}`;
   const body = {
     store_id: config.store_id,
     api_token: config.api_token,
@@ -202,3 +204,4 @@ module.exports.init = (configuration) => {
 module.exports.resAddCC = data => send(data, 'res_add_cc');
 module.exports.resPurchaseCC = data => send(data, 'res_purchase_cc');
 module.exports.resPreauthCC = data => send(data, 'res_preauth_cc');
+module.exports.resLookupMasked = data => send(data, 'res_lookup_masked');
