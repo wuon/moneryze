@@ -201,3 +201,4 @@ module.exports.init = (configuration) => {
 
 module.exports.resAddCC = data => send(data, 'res_add_cc');
 module.exports.resPurchaseCC = data => send(data, 'res_purchase_cc');
+module.exports.resPreauthCC = data => send(data, 'res_preauth_cc');

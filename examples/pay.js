@@ -26,7 +26,7 @@ moneris.resAddCC({
   });
   */
 
-moneris.resPurchaseCC({
+moneris.resPreauthCC({
   amount: (5.99 * 2), // we handle formatting for you, you just do your math.
   token: 'umYoVyY4DqZPv2i1mp91JlLy2',
   description: 'Two drinks',
