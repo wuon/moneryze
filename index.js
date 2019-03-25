@@ -11,7 +11,7 @@ xmlBuilder.options.rootName = 'request';
 
 let config;
 
-const filter = new Set(['res_lookup_masked', 'res_delete']);
+const filter = new Set(['res_lookup_masked', 'res_delete', 'completion', 'res_update_cc']);
 const sudo = new Set(['res_lookup_masked']);
 
 const cleanse = (str, spaces) => {
@@ -210,7 +210,9 @@ module.exports.init = (configuration) => {
 };
 
 module.exports.resAddCC = data => send(data, 'res_add_cc');
-module.exports.resDeleteCC = data => send(data, 'res_delete');
+module.exports.resDelete = data => send(data, 'res_delete');
+module.exports.resUpdateCC = data => send(data, 'res_update_cc');
 module.exports.resPurchaseCC = data => send(data, 'res_purchase_cc');
 module.exports.resPreauthCC = data => send(data, 'res_preauth_cc');
 module.exports.resLookupMasked = data => send(data, 'res_lookup_masked');
+module.exports.completion = data => send(data, 'completion');
