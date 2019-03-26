@@ -1,5 +1,6 @@
 const moneris = require('../index');
 
+
 moneris.init({
   app_name: 'Test',
   store_id: 'store5',
@@ -8,7 +9,7 @@ moneris.init({
   test: true,
 });
 
-moneris.resAddCC({
+console.log(moneris.resAddCC({
   pan: '4242424242424242',
   expdate: '2011',
 }).then((result) => {
@@ -22,11 +23,11 @@ moneris.resAddCC({
     console.log('Clean Response (failed):');
     console.log(err);
     // console.log(err.raw);
-  });
+  }));
 
 moneris.resPurchaseCC({
   amount: (5.99 * 2), // we handle formatting for you, you just do your math.
-  token: 'umYoVyY4DqZPv2i1mp91JlLy2',
+  token: '22MwMkaRAs0mZa6GZtKjXCF62',
   description: 'Two drinks',
   // forceDecline: true, //uncomment this if you want to test declined card (test must be equal to true in credentials)
 }).then((result) => { // APPROVED
@@ -76,7 +77,7 @@ moneris.resLookupMasked({
     // console.log(err.raw);
   });
 
-moneris.resDeleteCC({
+moneris.resDelete({
   token: 'umYoVyY4DqZPv2i1mp91JlLy2',
   // forceDecline: true, //uncomment this if you want to test declined card (test must be equal to true in credentials)
 }).then((result) => { // APPROVED

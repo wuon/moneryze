@@ -3,3 +3,4 @@ node_js:
   - "stable"
 # Use container-based infrastructure
 sudo: false
+after_success: npm run coverage

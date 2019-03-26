@@ -41,7 +41,7 @@ const normalizeExpiry = (format, expiry) => {
   return expiry;
 };
 
-const format = (data, sanitize = True) => {
+const format = (data, sanitize = true) => {
   const o = {};
   const reference = fe(data.ReferenceNum);
   const dataKey = fe(data.DataKey);
@@ -195,18 +195,24 @@ const send = async (data, type) => {
 };
 
 module.exports.init = (configuration) => {
-  config = configuration;
-  if (config.crypt_type === null) {
-    config.crypt_type = 7;
-  }
-  if (config.country_code) {
-    config.country_code = config.country_code.toUpperCase();
-    if (config.country_code !== 'CA'
-      && !Object.prototype.hasOwnProperty.call(globals, `${config.country_code}_HOST`)) {
-      return Promise.reject(new Error('Invalid country code. CA is only supported.'));
+  if (configuration.store_id && configuration.api_token) {
+    config = configuration;
+    if (config.crypt_type === null) {
+      config.crypt_type = 7;
     }
+    if (config.name === null) {
+      config.name = 'default';
+    }
+    if (config.country_code) {
+      config.country_code = config.country_code.toUpperCase();
+      if (config.country_code !== 'CA'
+        && !Object.prototype.hasOwnProperty.call(globals, `${config.country_code}_HOST`)) {
+        return Promise.reject(new Error('Invalid country code. CA is only supported.'));
+      }
+    }
+    return Promise.resolve();
   }
-  return Promise.resolve();
+  return Promise.reject(new Error('store_id and api_token are required.'));
 };
 
 module.exports.resAddCC = data => send(data, 'res_add_cc');

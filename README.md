@@ -1,5 +1,7 @@
 # moneryze
 
+[![Coverage Status](https://coveralls.io/repos/github/Wuon/moneryze/badge.svg?branch=master)](https://coveralls.io/github/Wuon/moneryze?branch=master)
+
 > A wrapper to access the Moneris API, forked from AlejandroEsquivel's great work (AlejandroEsquivel/moneris-js), forked from shaynair's great work (shaynair/moneris-js)
 
 > The hope for this module is to create clean, robust, promise wrapped queries that extend just beyond payments, shaynair's work supports for generalized queries to Moneris however, the hope is to have more examples and handling of imperfect formatting. 
