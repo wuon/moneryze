@@ -1,6 +1,8 @@
 # moneryze
 
-[![Coverage Status](https://coveralls.io/repos/github/Wuon/moneryze/badge.svg?branch=master)](https://coveralls.io/github/Wuon/moneryze?branch=master)
+[![Build Status](https://travis-ci.org/Wuon/moneryze.svg?branch=master)](https://travis-ci.org/Wuon/moneryze)&nbsp;
+[![Coverage Status](https://coveralls.io/repos/github/Wuon/moneryze/badge.svg?branch=master)](https://coveralls.io/github/Wuon/moneryze?branch=master)&nbsp;
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > A wrapper to access the Moneris API, forked from AlejandroEsquivel's great work (AlejandroEsquivel/moneris-js), forked from shaynair's great work (shaynair/moneris-js)
 
