@@ -1,17 +1,20 @@
 {
   "name": "moneryze",
-  "version": "1.0.1",
-  "description": "Node / promise wrapped API for Moneris' Transactions API",
+  "version": "1.0.2",
+  "description": "Promise based wrapper for the Moneris API",
   "main": "index.js",
   "files": [
     "/constants"
   ],
   "scripts": {
     "lint": "eslint",
-    "test": "nyc --reporter=html --reporter=text mocha",
+    "test": "nyc --reporter=html --reporter=text mocha --timeout 5000",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
-  "repository": "https://github.com/Wuon/moneryze",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wuon/moneryze.git"
+  },
   "author": "wuon@protonmail.com",
   "license": "MIT",
   "dependencies": {

@@ -27,7 +27,8 @@ const cleanse = (str, spaces) => {
     .join('')
     .split('-')
     .join('')
-    .trim() : '');
+    .trim() : '')
+    .replace(/\s+/g, ' ');
 };
 
 /* eslint-disable-next-line no-nested-ternary */
@@ -137,7 +138,7 @@ const send = async (data, type) => {
   const out = data;
   if (!filter.has(type)) {
     out.crypt_type = data.crypt_type || config.crypt_type;
-    out.order_id = out.order_id || `${cleanse(config.app_name, true)}-Purchase-${suffix}`;
+    out.order_id = out.order_id || `${cleanse(config.name, true)}-Purchase-${suffix}`;
   }
   if (out.forceDecline && out.test) {
     out.amount = 0.05;
@@ -197,20 +198,20 @@ const send = async (data, type) => {
 module.exports.init = (configuration) => {
   if (configuration.store_id && configuration.api_token) {
     config = configuration;
-    if (config.crypt_type === null) {
-      config.crypt_type = 7;
+    if (!config.crypt_type) {
+      config.crypt_type = '7';
     }
-    if (config.name === null) {
+    if (!config.name) {
       config.name = 'default';
     }
     if (config.country_code) {
       config.country_code = config.country_code.toUpperCase();
       if (config.country_code !== 'CA'
         && !Object.prototype.hasOwnProperty.call(globals, `${config.country_code}_HOST`)) {
-        return Promise.reject(new Error('Invalid country code. CA is only supported.'));
+        return Promise.reject(new Error('Invalid country code. CA, US is only supported.'));
       }
     }
-    return Promise.resolve();
+    return Promise.resolve(config);
   }
   return Promise.reject(new Error('store_id and api_token are required.'));
 };

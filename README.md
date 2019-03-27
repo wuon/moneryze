@@ -64,6 +64,19 @@ moneris.resAddCC({
   expdate: '2011',
 });
 ```
+
+#### .resPurchaseCC()
+- `token`: **Required.** customer's moneris token.
+- `amount`: **Required.** amount to charge
+- `description`: Optional. A short message attached to the purchase.
+```bash
+moneris.resPurchaseCC({
+  token: 'D8WyyItuNb6mHn4biiPqAwM42',
+  amount: 11.98,
+  description: 'bubble tea',
+});
+```
+
 ## License
 
 [MIT](http://g14n.info/mit-license)
