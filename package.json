@@ -1,8 +1,11 @@
 {
   "name": "moneryze",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node / promise wrapped API for Moneris' Transactions API",
   "main": "index.js",
+  "files": [
+    "/constants"
+  ],
   "scripts": {
     "lint": "eslint",
     "test": "nyc --reporter=html --reporter=text mocha",
