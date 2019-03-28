@@ -140,8 +140,9 @@ const send = async (data, type) => {
     out.crypt_type = data.crypt_type || config.crypt_type;
     out.order_id = out.order_id || `${cleanse(config.name, true)}-Purchase-${suffix}`;
   }
-  if (out.forceDecline && out.test) {
+  if (config.test && out.test) {
     out.amount = 0.05;
+    delete out.test;
   }
   if (out.pan) {
     out.pan = cleanse(data.pan, true);

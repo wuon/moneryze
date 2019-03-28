@@ -62,7 +62,7 @@ moneris.resPreauthCC({
   });
 
 moneris.resLookupMasked({
-  token: 'umYoVyY4DqZPv2i1mp91JlLy2',
+  token: '22MwMkaRAs0mZa6GZtKjXCF62',
   // forceDecline: true, //uncomment this if you want to test declined card (test must be equal to true in credentials)
 }).then((result) => { // APPROVED
   console.log('--');

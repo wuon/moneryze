@@ -116,12 +116,84 @@ describe('Unit Testing', () => {
       token = res.data.dataKey;
     });
   });
+  describe('moneris.resUpdateCC()', () => {
+    it('should receive an object with the following parameters', async () => {
+      const res = await moneris.resUpdateCC({
+        token,
+        pan: '4242424242424242',
+        expdate: '2011',
+      });
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).true;
+      expect(res).to.have.property('code');
+      expect(res.code).to.be.a('string');
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
+  });
+  describe('moneris.resLookupCC()', () => {
+    it('should receive an object with the following parameters', async () => {
+      const res = await moneris.resLookupMasked({
+        token,
+      });
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).true;
+      expect(res).to.have.property('code');
+      expect(res.code).to.be.a('string');
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
+  });
   describe('moneris.resPurchaseCC()', () => {
+    it('should receive an object with the following parameters and declined', async () => {
+      const res = await moneris.resPurchaseCC({
+        amount: 11.98,
+        token,
+        description: 'Two drinks',
+        test: true,
+      });
+      console.log(res);
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).false;
+      expect(res).to.have.property('code');
+      expect(res.code).to.be.a('string');
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
     it('should receive an object with the following parameters', async () => {
       const res = await moneris.resPurchaseCC({
         amount: 11.98,
         token,
         description: 'Two drinks',
+      });
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).true;
+      expect(res).to.have.property('code');
+      expect(res.code).to.be.a('string');
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
+  });
+  describe('moneris.resDelete()', () => {
+    it('should receive an object with the following parameters', async () => {
+      const res = await moneris.resDelete({
+        token,
       });
       expect(res).to.be.a('object');
       expect(res).to.have.property('isSuccess');
