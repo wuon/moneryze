@@ -160,7 +160,6 @@ describe('Unit Testing', () => {
         description: 'Two drinks',
         test: true,
       });
-      console.log(res);
       expect(res).to.be.a('object');
       expect(res).to.have.property('isSuccess');
       expect(res.isSuccess).to.be.a('boolean');
