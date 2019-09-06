@@ -206,4 +206,38 @@ describe('Unit Testing', () => {
       expect(res.data).to.be.a('object');
     });
   });
+  describe('moneris.purchase()', () => {
+    it('should receive an object with the following parameters and declined', async () => {
+      const purchasePayload = {
+        order_id: `OR-1${new Date()}`, amount: '0.02', pan: 4242424242424242, expdate: 2504, description: 'Nordik online reservation',
+      };
+      const res = await moneris.purchase(purchasePayload);
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).false;
+      expect(res).to.have.property('code');
+      expect(res.code).to.be.a('string');
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
+    it('should receive an object with the following parameters', async () => {
+      const purchasePayload = {
+        order_id: `OR-1${new Date()}`, amount: '0.08', pan: 4242424242424242, expdate: 2504, description: 'Nordik online reservation',
+      };
+      const res = await moneris.purchase(purchasePayload);
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).true;
+      expect(res).to.have.property('code');
+      expect(res.code).to.be.a('string');
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
+  });
 });
