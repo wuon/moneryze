@@ -9,7 +9,7 @@
 
 > A wrapper to access the Moneris API, forked from AlejandroEsquivel's great work (AlejandroEsquivel/moneris-js), forked from shaynair's great work (shaynair/moneris-js)
 
-> The hope for this module is to create clean, robust, promise wrapped queries that extend just beyond payments. Shaynair's work supported generalized queries to Moneris, Alejandro's work handled the imperfect formatting. My hope is to extend and complete the wrapper, transforming the project into something easy to implement by any developer. 
+> The hope for this module is to create clean, robust, promise wrapped queries that extend just beyond payments. Shaynair's work supported generalized queries to Moneris, Alejandro's work handled the imperfect formatting. My hope is to extend and complete the wrapper, transforming the project into something easy to implement by any developer.
 
 [Installation](#installation) |
 [Usage](#usage) |
@@ -38,9 +38,9 @@ Queries the Moneris API with the information provided.
   - `store_id`: **Required.** Your store ID.
   - `crypt_type`: Optional. If given, will set the default crypt_type for all transactions. `7` by default.
   - `test`: Optional. If true, uses Moneris Test endpoints. You can get a `api_token` and `store_id` for this endpoint from Moneris's Documentation. `false` by default.
- 
+
 **.init() must be called before any other operation, otherwise an error will be thrown**
- 
+
 ## Example
 
 #### .init()
@@ -72,6 +72,20 @@ moneris.resAddCC({
 ```bash
 moneris.resPurchaseCC({
   token: 'D8WyyItuNb6mHn4biiPqAwM42',
+  amount: 11.98,
+  description: 'bubble tea',
+});
+```
+
+#### .purchase()
+- `pan`: **Required.** card number.
+- `expdate`: **Required.** Expiry date of the card.
+- `amount`: **Required.** amount to charge
+- `description`: Optional. A short message attached to the purchase.
+```bash
+moneris.resPurchaseCC({
+  pan: '4242424242424242',
+  expdate: '2011',
   amount: 11.98,
   description: 'bubble tea',
 });
