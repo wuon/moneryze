@@ -6,6 +6,8 @@ const moneris = require('../index');
 chai.use(require('chai-as-promised'));
 
 let token;
+let orderId;
+let txnNumber;
 
 describe('Unit Testing', () => {
   describe('moneris.init()', () => {
@@ -187,6 +189,8 @@ describe('Unit Testing', () => {
       expect(res.msg).to.be.a('string');
       expect(res).to.have.property('data');
       expect(res.data).to.be.a('object');
+      orderId = res.data.receipt;
+      txnNumber = res.data.id;
     });
   });
   describe('moneris.resDelete()', () => {
@@ -234,6 +238,55 @@ describe('Unit Testing', () => {
       expect(res.isSuccess).true;
       expect(res).to.have.property('code');
       expect(res.code).to.be.a('string');
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
+  });
+  describe('moneris.refund()', () => {
+    it('should receive an object with the following parameters and failed', async () => {
+      const res = await moneris.refund({
+        txn_number: txnNumber,
+        order_id: orderId,
+        amount: 12.98,
+      });
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).false;
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
+    it('should receive an object with the following parameters', async () => {
+      const res = await moneris.refund({
+        txn_number: txnNumber,
+        order_id: orderId,
+        amount: 11.98,
+      });
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).true;
+      expect(res).to.have.property('code');
+      expect(res.code).to.be.a('string');
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+    });
+    it('should receive an object with the following parameters and failed', async () => {
+      const res = await moneris.refund({
+        txn_number: txnNumber,
+        order_id: orderId,
+        amount: 11.98,
+      });
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).false;
       expect(res).to.have.property('msg');
       expect(res.msg).to.be.a('string');
       expect(res).to.have.property('data');

@@ -13,7 +13,7 @@
 
 [Installation](#installation) |
 [Usage](#usage) |
-[Example](#example) |f
+[Example](#example) |
 [License](#license)
 
 ## Installation
@@ -39,11 +39,11 @@ Queries the Moneris API with the information provided.
   - `crypt_type`: Optional. If given, will set the default crypt_type for all transactions. `7` by default.
   - `test`: Optional. If true, uses Moneris Test endpoints. You can get a `api_token` and `store_id` for this endpoint from Moneris's Documentation. `false` by default.
 
-**.init() must be called before any other operation, otherwise an error will be thrown**
+.init() must be called before any other operation, otherwise an error will be thrown
 
-## Example
+## Examples
 
-#### .init()
+### .init()
 
 ```bash
 moneris.init({
@@ -55,9 +55,11 @@ moneris.init({
 });
 ```
 
-#### .resAddCC()
-- `pan`: **Required.** card number.
+### .resAddCC()
+
+- `pan`: **Required.** Card number.
 - `expdate`: **Required.** Expiry date of the card.
+
 ```bash
 moneris.resAddCC({
   pan: '4242424242424242',
@@ -65,10 +67,12 @@ moneris.resAddCC({
 });
 ```
 
-#### .resPurchaseCC()
-- `token`: **Required.** customer's moneris token.
-- `amount`: **Required.** amount to charge
+### .resPurchaseCC()
+
+- `token`: **Required.** Customer's moneris token.
+- `amount`: **Required.** Amount to charge.
 - `description`: Optional. A short message attached to the purchase.
+
 ```bash
 moneris.resPurchaseCC({
   token: 'D8WyyItuNb6mHn4biiPqAwM42',
@@ -77,11 +81,13 @@ moneris.resPurchaseCC({
 });
 ```
 
-#### .purchase()
-- `pan`: **Required.** card number.
+### .purchase()
+
+- `pan`: **Required.** Card number.
 - `expdate`: **Required.** Expiry date of the card.
-- `amount`: **Required.** amount to charge
+- `amount`: **Required.** Amount to charge.
 - `description`: Optional. A short message attached to the purchase.
+
 ```bash
 moneris.resPurchaseCC({
   pan: '4242424242424242',
@@ -91,11 +97,26 @@ moneris.resPurchaseCC({
 });
 ```
 
+### .refund()
+
+- `order_id`: **Required.** The ID of the order from the transaction.
+- `txn_number`: **Required.**. The number from the transaction.
+- `amount`: **Required.** Amount to refund.
+
+```bash
+moneris.refund({
+  order_id: 'mvt2713618548',
+  txn_number: '911464-0_10',
+  amount: 11.98,
+});
+```
+
 ## License
 
 [MIT](http://g14n.info/mit-license)
 
 ## Notes
+
 With love and passion,
 
 wuon
