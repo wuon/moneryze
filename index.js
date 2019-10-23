@@ -225,3 +225,4 @@ module.exports.resPreauthCC = data => send(data, 'res_preauth_cc');
 module.exports.resLookupMasked = data => send(data, 'res_lookup_masked');
 module.exports.completion = data => send(data, 'completion');
 module.exports.purchase = data => send(data, 'purchase');
+module.exports.refund = data => send(data, 'refund');
