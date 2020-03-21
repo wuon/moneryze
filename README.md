@@ -33,7 +33,7 @@ Note: You need **an engine that supports ES6 (e.g. Babel or Node 4.0+)**.
 Queries the Moneris API with the information provided.
 
 - `config`: **Required.** An object with the following fields.
-  - `app_name`: Optional. If given, will add  `app_name` as a prefix to receipt names.
+  - `app_name`: Optional. If given, will add `app_name` as a prefix to receipt names.
   - `api_token`: **Required.** Your API token.
   - `store_id`: **Required.** Your store ID.
   - `crypt_type`: Optional. If given, will set the default crypt_type for all transactions. `7` by default.
@@ -108,6 +108,36 @@ moneris.refund({
   order_id: 'mvt2713618548',
   txn_number: '911464-0_10',
   amount: 11.98,
+});
+```
+
+### .preauth()
+
+- `order_id`: **Required.** The ID of the order for the preauthorization.
+- `amount`: **Required.** Amount to preauthorize.
+- `pan`: **Required.** Card number.
+- `expdate`: **Required.** Expiry date of the card.
+
+```bash
+moneris.refund({
+  order_id: 'mvt2713618548',
+  amount: 11.98,
+  pan: '4242424242424242',
+  expdate: '2011'
+});
+```
+
+### .completion()
+
+- `order_id`: **Required.** The ID of the order for the preauthorization.
+- `amount`: **Required.** Completion amount.
+- `txn_number`: **Required.**. The number from the transaction.
+
+```bash
+moneris.completion({
+  order_id: 'mvt2713618548',
+  amount: 11.98,
+  txn_number: '911464-0_10',
 });
 ```
 
