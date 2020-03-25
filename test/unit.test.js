@@ -250,6 +250,7 @@ describe('Unit Testing', () => {
       const res = await moneris.refund({
         txn_number: txnNumber,
         order_id: orderId,
+        amount: 12.98
       });
       expect(res).to.be.a('object');
       expect(res).to.have.property('isSuccess');
