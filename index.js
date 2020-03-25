@@ -227,3 +227,4 @@ module.exports.completion = data => send(data, 'completion');
 module.exports.purchase = data => send(data, 'purchase');
 module.exports.refund = data => send(data, 'refund');
 module.exports.preauth = data => send(data, 'preauth');
+module.exports.independentRefundWithVault = data => send(data, 'res_ind_refund_cc');

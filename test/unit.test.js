@@ -249,7 +249,7 @@ describe('Unit Testing', () => {
       const res = await moneris.refund({
         txn_number: txnNumber,
         order_id: orderId,
-        amount: 12.98,
+        amount: 12.98
       });
       expect(res).to.be.a('object');
       expect(res).to.have.property('isSuccess');
@@ -293,4 +293,33 @@ describe('Unit Testing', () => {
       expect(res.data).to.be.a('object');
     });
   });
+  describe('moneris.independentRefundWithVault', () => {
+    it('Should refund an amount to a vault credit card', async () => {
+      const now = new Date();
+      const cust_id = 'Cust1'
+      const res = await moneris.resAddCC({
+        pan: '4242424242424242',
+        expdate: '2011',
+        cust_id,
+        phone: '0000000000',
+        email: 'bob@bob.com',
+        description: 'register'
+      });
+      const ref = await moneris.independentRefundWithVault({
+        cust_id,
+        amount: 0.1,
+        token: res.data.dataKey,
+        order_id: `Test${now.getTime()}`,
+
+      })
+      expect(ref).to.be.a('object');
+      expect(ref).to.have.property('isSuccess');
+      expect(ref.isSuccess).to.be.a('boolean');
+      expect(ref.isSuccess).true;
+      expect(ref).to.have.property('msg');
+      expect(ref.msg).to.be.a('string');
+      expect(ref).to.have.property('data');
+      expect(ref.data).to.be.a('object');
+    })
+  })
 });

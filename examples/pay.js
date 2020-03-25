@@ -36,11 +36,11 @@ moneris.resPurchaseCC({
   console.log(result);
 })
   .catch((err) => { // DECLINED
-  // err.raw = undefined;//comment out if you want the raw response.
+    // err.raw = undefined;//comment out if you want the raw response.
     console.log('--');
     console.log('Clean Response (failed):');
     console.log(err);
-  // console.log(err.raw);
+    // console.log(err.raw);
   });
 
 moneris.resPreauthCC({
@@ -92,3 +92,28 @@ moneris.resDelete({
     console.log(err);
     // console.log(err.raw);
   });
+
+const now = new Date();
+moneris.resAddCC({
+  pan: '4242424242424242',
+  expdate: '2011',
+}).then(res => {
+  moneris.independentRefundWithVault({
+    token: res.data.dataKey,
+    amount: 0.1,
+    order_id: `Test${now.getTime()}`,
+    // forceDecline: true, //uncomment this if you want to test declined card (test must be equal to true in credentials)
+  }).then((result) => { // APPROVED
+    console.log('--');
+    console.log('Clean (passed):');
+    console.log(result);
+  })
+    .catch((err) => { // DECLINED
+      // err.raw = undefined;//comment out if you want the raw response.
+      console.log('--');
+      console.log('Clean Response (failed):');
+      console.log(err);
+      // console.log(err.raw);
+    });
+})
+
