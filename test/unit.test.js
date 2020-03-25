@@ -95,7 +95,6 @@ describe('Unit Testing', () => {
         api_token: 'yesguy',
         crypt_type: '7',
         test: true,
-        country_code: 'CA'
       });
       expect(res).to.be.fulfilled;
     });
