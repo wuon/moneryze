@@ -10,7 +10,7 @@ const xmlBuilder = new xml.Builder();
 xmlBuilder.options.rootName = 'request';
 
 let config = {
-  app_name: 'nordik',
+  app_name: 'moneryze',
   store_id: 'store5',
   api_token: 'yesguy',
   crypt_type: '7',
