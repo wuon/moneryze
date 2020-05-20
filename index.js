@@ -137,7 +137,6 @@ const format = (data, sanitize = true) => {
 };
 
 const send = async (data, type, configuration) => {
-  console.log(type, configuration);
   if (!configuration || !configuration.store_id || !configuration.api_token) {
     return Promise.reject(new Error('configuration not initialized'));
   }
