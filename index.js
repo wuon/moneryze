@@ -71,6 +71,11 @@ const format = (data, sanitize = true) => {
   const recurSuccess = fe(data.RecurSuccess, 'true');
   const resolveData = fe(data.ResolveData);
   const maskedPan = resolveData ? fe(resolveData.masked_pan) : null;
+  const kountInfo = fe(data.KountInfo);
+  const kountResult = fe(data.KountResult);
+  const kountScore = fe(data.KountScore);
+  const kountTransactionId = fe(data.KountTransactionId);
+
   if (reference && reference !== 'null') {
     o.reference = reference;
   }
@@ -128,6 +133,20 @@ const format = (data, sanitize = true) => {
   if (maskedPan && maskedPan !== 'null' && !sanitize) {
     o.maskedPan = maskedPan;
   }
+
+  if (kountInfo && kountInfo !== 'null') {
+    o.kountInfo = kountInfo;
+  }
+  if (kountResult && kountResult !== 'null') {
+    o.kountResult = kountResult;
+  }
+  if (kountScore && kountScore !== 'null') {
+    o.kountScore = kountScore;
+  }
+  if (kountTransactionId && kountTransactionId !== 'null') {
+    o.kountTransactionId = kountTransactionId;
+  }
+
   return {
     isSuccess: !fe(data.TimedOut, 'true') && ((code) === '00' || code ? parseInt(code, 10) < 50 : false),
     code,
@@ -234,3 +253,4 @@ module.exports.purchase = (data, configuration = config) => send(data, 'purchase
 module.exports.refund = (data, configuration = config) => send(data, 'refund', configuration);
 module.exports.preauth = (data, configuration = config) => send(data, 'preauth', configuration);
 module.exports.independentRefundWithVault = (data, configuration = config) => send(data, 'res_ind_refund_cc', configuration);
+module.exports.kountInquire = (data, configuration = config) => send(data, 'kount_inquiry', configuration);
