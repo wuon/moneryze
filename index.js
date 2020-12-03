@@ -1,6 +1,7 @@
 const xml = require('xml2js');
 const Promise = require('bluebird');
 const axios = require('axios');
+const { camelCase } = require('change-case');
 
 Promise.promisifyAll(xml);
 
@@ -11,7 +12,7 @@ xmlBuilder.options.rootName = 'request';
 
 let config = {
   app_name: 'moneryze',
-  store_id: 'store5',
+  store_id: 'store5', // CVD & AVS only works with store5
   api_token: 'yesguy',
   crypt_type: '7',
   test: true,
@@ -71,6 +72,11 @@ const format = (data, sanitize = true) => {
   const recurSuccess = fe(data.RecurSuccess, 'true');
   const resolveData = fe(data.ResolveData);
   const maskedPan = resolveData ? fe(resolveData.masked_pan) : null;
+  const kountInfo = fe(data.KountInfo);
+  const kountResult = fe(data.KountResult);
+  const kountScore = fe(data.KountScore);
+  const kountTransactionId = fe(data.KountTransactionId);
+
   if (reference && reference !== 'null') {
     o.reference = reference;
   }
@@ -128,6 +134,24 @@ const format = (data, sanitize = true) => {
   if (maskedPan && maskedPan !== 'null' && !sanitize) {
     o.maskedPan = maskedPan;
   }
+
+  if (kountInfo && kountInfo !== 'null') {
+    o.kountInfo = Object.keys(kountInfo).reduce((total, current) => {
+      const newTotal = { ...total };
+      newTotal[camelCase(current)] = kountInfo[current].pop();
+      return newTotal;
+    }, {});
+  }
+  if (kountResult && kountResult !== 'null') {
+    o.kountResult = kountResult;
+  }
+  if (kountScore && kountScore !== 'null') {
+    o.kountScore = kountScore;
+  }
+  if (kountTransactionId && kountTransactionId !== 'null') {
+    o.kountTransactionId = kountTransactionId;
+  }
+
   return {
     isSuccess: !fe(data.TimedOut, 'true') && ((code) === '00' || code ? parseInt(code, 10) < 50 : false),
     code,
@@ -164,6 +188,17 @@ const send = async (data, type, configuration) => {
     out.data_key = out.token;
     delete out.token;
   }
+
+  if (type === 'kount_inquiry') {
+    // default values for email and ANID when they weren't specified in payload
+    if (!out.email) {
+      out.email = 'noemail@kount.com';
+    }
+    if (!out.auto_number_id) {
+      out.auto_number_id = '0123456789'
+    }
+  }
+
   const body = {
     store_id: configuration.store_id,
     api_token: configuration.api_token,
@@ -234,3 +269,5 @@ module.exports.purchase = (data, configuration = config) => send(data, 'purchase
 module.exports.refund = (data, configuration = config) => send(data, 'refund', configuration);
 module.exports.preauth = (data, configuration = config) => send(data, 'preauth', configuration);
 module.exports.independentRefundWithVault = (data, configuration = config) => send(data, 'res_ind_refund_cc', configuration);
+module.exports.kountInquire = (data, configuration = config) => send(data, 'kount_inquiry', configuration);
+module.exports.kountUpdate = (data, configuration = config) => send(data, 'kount_update', configuration);

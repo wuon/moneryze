@@ -1,6 +1,6 @@
 {
   "name": "moneryze",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Promise based wrapper for the Moneris API",
   "main": "index.js",
   "files": [
@@ -20,6 +20,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bluebird": "^3.4.7",
+    "change-case": "^4.1.2",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
