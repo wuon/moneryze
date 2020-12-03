@@ -190,7 +190,7 @@ const send = async (data, type, configuration) => {
   }
 
   if (type === 'kount_inquiry') {
-  // default values for email and ANID when they weren't specified in payload
+    // default values for email and ANID when they weren't specified in payload
     if (!out.email) {
       out.email = 'noemail@kount.com';
     }
