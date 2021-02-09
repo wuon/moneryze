@@ -48,6 +48,8 @@ const format = (data, sanitize = true) => {
   const dataKey = fe(data.DataKey);
   const iso = fe(data.ISO);
   const receipt = fe(data.ReceiptId);
+  const avsResultCode = fe(data.AvsResultCode);
+  const cvdResultCode = fe(data.CvdResultCode);
   const isVisa = fe(data.CardType, 'V');
   const isMasterCard = fe(data.CardType, 'M');
   const isVisaDebit = fe(data.IsVisaDebit, 'true');
@@ -76,6 +78,12 @@ const format = (data, sanitize = true) => {
   }
   if (receipt && receipt !== 'null') {
     o.receipt = receipt;
+  }
+  if (avsResultCode) {
+    o.avsResultCode = avsResultCode;
+  }
+  if (cvdResultCode !== null && cvdResultCode !== 'null') {
+    o.cvdResultCode = cvdResultCode;
   }
   if (isVisa !== null && isVisa !== 'null') {
     o.isVisa = isVisa;
@@ -157,6 +165,12 @@ const send = async (data, type) => {
   if (out.token) {
     out.data_key = out.token;
     delete out.token;
+  }
+  if (out.cvd_info) {
+    out.cvd_info = out.cvd_info;
+  }
+  if (out.avs_info) {
+    out.avs_info = out.avs_info;
   }
   const body = {
     store_id: config.store_id,
