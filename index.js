@@ -55,6 +55,8 @@ const format = (data, sanitize = true) => {
   const dataKey = fe(data.DataKey);
   const iso = fe(data.ISO);
   const receipt = fe(data.ReceiptId);
+  const avsResultCode = fe(data.AvsResultCode);
+  const cvdResultCode = fe(data.CvdResultCode);
   const isVisa = fe(data.CardType, 'V');
   const isMasterCard = fe(data.CardType, 'M');
   const isVisaDebit = fe(data.IsVisaDebit, 'true');
@@ -88,6 +90,12 @@ const format = (data, sanitize = true) => {
   }
   if (receipt && receipt !== 'null') {
     o.receipt = receipt;
+  }
+  if (avsResultCode) {
+    o.avsResultCode = avsResultCode;
+  }
+  if (cvdResultCode !== null && cvdResultCode !== 'null') {
+    o.cvdResultCode = cvdResultCode;
   }
   if (isVisa !== null && isVisa !== 'null') {
     o.isVisa = isVisa;
@@ -188,6 +196,12 @@ const send = async (data, type, configuration) => {
     out.data_key = out.token;
     delete out.token;
   }
+  if (out.cvd_info) {
+    out.cvd_info = out.cvd_info;
+  }
+  if (out.avs_info) {
+    out.avs_info = out.avs_info;
+  }
 
   if (type === 'kount_inquiry') {
     // default values for email and ANID when they weren't specified in payload
@@ -195,7 +209,7 @@ const send = async (data, type, configuration) => {
       out.email = 'noemail@kount.com';
     }
     if (!out.auto_number_id) {
-      out.auto_number_id = '0123456789'
+      out.auto_number_id = '0123456789';
     }
   }
 

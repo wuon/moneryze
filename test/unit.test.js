@@ -231,7 +231,18 @@ describe('Unit Testing', () => {
     });
     it('should receive an object with the following parameters', async () => {
       const purchasePayload = {
-        order_id: `OR-1${new Date()}`, amount: '0.08', pan: 4242424242424242, expdate: 2504, description: 'Nordik online reservation',
+        order_id: `OR-1${new Date()}`,
+        amount: '0.08', 
+        pan: 4242424242424242, 
+        expdate: 2504, 
+        cvd_info: { cvd_indicator: 1, cvd_value: 123 }, 
+        avs_info: { 
+          avs_street_number: '201',
+          avs_street_name: 'Michigan Ave',
+          avs_custphone: '5556667777',
+          avs_zipcode: 'M1M1M1'
+        }, 
+        description: 'Nordik online reservation',
       };
       const res = await moneris.purchase(purchasePayload);
       expect(res).to.be.a('object');
