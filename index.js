@@ -1,6 +1,7 @@
 const xml = require('xml2js');
 const Promise = require('bluebird');
 const axios = require('axios');
+const { camelCase } = require('change-case');
 
 Promise.promisifyAll(xml);
 
@@ -9,7 +10,13 @@ const globals = require('./constants/globals.json');
 const xmlBuilder = new xml.Builder();
 xmlBuilder.options.rootName = 'request';
 
-let config;
+let config = {
+  app_name: 'moneryze',
+  store_id: 'store5', // CVD & AVS only works with store5
+  api_token: 'yesguy',
+  crypt_type: '7',
+  test: true,
+};
 
 const filter = new Set(['res_lookup_masked', 'res_delete', 'completion', 'res_update_cc']);
 const sudo = new Set(['res_lookup_masked']);
@@ -67,6 +74,11 @@ const format = (data, sanitize = true) => {
   const recurSuccess = fe(data.RecurSuccess, 'true');
   const resolveData = fe(data.ResolveData);
   const maskedPan = resolveData ? fe(resolveData.masked_pan) : null;
+  const kountInfo = fe(data.KountInfo);
+  const kountResult = fe(data.KountResult);
+  const kountScore = fe(data.KountScore);
+  const kountTransactionId = fe(data.KountTransactionId);
+
   if (reference && reference !== 'null') {
     o.reference = reference;
   }
@@ -130,6 +142,24 @@ const format = (data, sanitize = true) => {
   if (maskedPan && maskedPan !== 'null' && !sanitize) {
     o.maskedPan = maskedPan;
   }
+
+  if (kountInfo && kountInfo !== 'null') {
+    o.kountInfo = Object.keys(kountInfo).reduce((total, current) => {
+      const newTotal = { ...total };
+      newTotal[camelCase(current)] = kountInfo[current].pop();
+      return newTotal;
+    }, {});
+  }
+  if (kountResult && kountResult !== 'null') {
+    o.kountResult = kountResult;
+  }
+  if (kountScore && kountScore !== 'null') {
+    o.kountScore = kountScore;
+  }
+  if (kountTransactionId && kountTransactionId !== 'null') {
+    o.kountTransactionId = kountTransactionId;
+  }
+
   return {
     isSuccess: !fe(data.TimedOut, 'true') && ((code) === '00' || code ? parseInt(code, 10) < 50 : false),
     code,
@@ -138,17 +168,17 @@ const format = (data, sanitize = true) => {
   };
 };
 
-const send = async (data, type) => {
-  if (!config || !config.store_id || !config.api_token) {
+const send = async (data, type, configuration) => {
+  if (!configuration || !configuration.store_id || !configuration.api_token) {
     return Promise.reject(new Error('configuration not initialized'));
   }
   const suffix = `${(new Date()).getTime()}-${Math.ceil(Math.random() * 10000)}`;
   const out = data;
   if (!filter.has(type)) {
-    out.crypt_type = data.crypt_type || config.crypt_type;
-    out.order_id = out.order_id || `${cleanse(config.name, true)}-Purchase-${suffix}`;
+    out.crypt_type = data.crypt_type || configuration.crypt_type;
+    out.order_id = out.order_id || `${cleanse(configuration.name, true)}-Purchase-${suffix}`;
   }
-  if (config.test && out.test) {
+  if (configuration.test && out.test) {
     out.amount = 0.05;
     delete out.test;
   }
@@ -156,7 +186,7 @@ const send = async (data, type) => {
     out.pan = cleanse(data.pan, true);
   }
   if (out.expdate) {
-    out.expdate = normalizeExpiry(config.expiryFormat, cleanse(data.expdate, true));
+    out.expdate = normalizeExpiry(configuration.expiryFormat, cleanse(data.expdate, true));
   }
   if (out.description) {
     out.dynamic_descriptor = out.description || out.dynamic_descriptor || type;
@@ -172,9 +202,20 @@ const send = async (data, type) => {
   if (out.avs_info) {
     out.avs_info = out.avs_info;
   }
+
+  if (type === 'kount_inquiry') {
+    // default values for email and ANID when they weren't specified in payload
+    if (!out.email) {
+      out.email = 'noemail@kount.com';
+    }
+    if (!out.auto_number_id) {
+      out.auto_number_id = '0123456789';
+    }
+  }
+
   const body = {
-    store_id: config.store_id,
-    api_token: config.api_token,
+    store_id: configuration.store_id,
+    api_token: configuration.api_token,
   };
   if (type === 'attribute_query' || type === 'session_query') {
     body.risk = {};
@@ -183,7 +224,7 @@ const send = async (data, type) => {
     body[type] = out;
   }
   let prefix = '';
-  if (!!config.country_code && config.country_code !== 'CA') {
+  if (!!configuration.country_code && config.country_code !== 'CA') {
     prefix += `${config.country_code}_`;
   }
   let hostPrefix = prefix;
@@ -231,13 +272,16 @@ module.exports.init = (configuration) => {
   return Promise.reject(new Error('store_id and api_token are required.'));
 };
 
-module.exports.resAddCC = data => send(data, 'res_add_cc');
-module.exports.resDelete = data => send(data, 'res_delete');
-module.exports.resUpdateCC = data => send(data, 'res_update_cc');
-module.exports.resPurchaseCC = data => send(data, 'res_purchase_cc');
-module.exports.resPreauthCC = data => send(data, 'res_preauth_cc');
-module.exports.resLookupMasked = data => send(data, 'res_lookup_masked');
-module.exports.completion = data => send(data, 'completion');
-module.exports.purchase = data => send(data, 'purchase');
-module.exports.refund = data => send(data, 'refund');
-module.exports.preauth = data => send(data, 'preauth');
+module.exports.resAddCC = (data, configuration = config) => send(data, 'res_add_cc', configuration);
+module.exports.resDelete = (data, configuration = config) => send(data, 'res_delete', configuration);
+module.exports.resUpdateCC = (data, configuration = config) => send(data, 'res_update_cc', configuration);
+module.exports.resPurchaseCC = (data, configuration = config) => send(data, 'res_purchase_cc', configuration);
+module.exports.resPreauthCC = (data, configuration = config) => send(data, 'res_preauth_cc', configuration);
+module.exports.resLookupMasked = (data, configuration = config) => send(data, 'res_lookup_masked', configuration);
+module.exports.completion = (data, configuration = config) => send(data, 'completion', configuration);
+module.exports.purchase = (data, configuration = config) => send(data, 'purchase', configuration);
+module.exports.refund = (data, configuration = config) => send(data, 'refund', configuration);
+module.exports.preauth = (data, configuration = config) => send(data, 'preauth', configuration);
+module.exports.independentRefundWithVault = (data, configuration = config) => send(data, 'res_ind_refund_cc', configuration);
+module.exports.kountInquire = (data, configuration = config) => send(data, 'kount_inquiry', configuration);
+module.exports.kountUpdate = (data, configuration = config) => send(data, 'kount_update', configuration);

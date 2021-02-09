@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const chai = require('chai');
 
 const { expect } = chai;
@@ -5,11 +6,11 @@ const moneris = require('../index');
 
 chai.use(require('chai-as-promised'));
 
-let token;
-let orderId;
-let txnNumber;
-
 describe('Unit Testing', () => {
+  let token;
+  let orderId;
+  let txnNumber;
+
   describe('moneris.init()', () => {
     it('should receive a rejected promise with an error', () => {
       const res = moneris.resAddCC({
@@ -210,6 +211,7 @@ describe('Unit Testing', () => {
       expect(res.data).to.be.a('object');
     });
   });
+
   describe('moneris.purchase()', () => {
     it('should receive an object with the following parameters and declined', async () => {
       const purchasePayload = {
@@ -304,4 +306,157 @@ describe('Unit Testing', () => {
       expect(res.data).to.be.a('object');
     });
   });
+  describe('moneris.independentRefundWithVault', () => {
+    it('Should refund an amount to a vault credit card', async () => {
+      const now = new Date();
+      const cust_id = 'Cust1';
+      const res = await moneris.resAddCC({
+        pan: '4242424242424242',
+        expdate: '2011',
+        cust_id,
+        phone: '0000000000',
+        email: 'bob@bob.com',
+        description: 'register',
+      });
+      const ref = await moneris.independentRefundWithVault({
+        cust_id,
+        amount: 0.1,
+        token: res.data.dataKey,
+        order_id: `Test${now.getTime()}`,
+
+      });
+      expect(ref).to.be.a('object');
+      expect(ref).to.have.property('isSuccess');
+      expect(ref.isSuccess).to.be.a('boolean');
+      expect(ref.isSuccess).true;
+      expect(ref).to.have.property('msg');
+      expect(ref.msg).to.be.a('string');
+      expect(ref).to.have.property('data');
+      expect(ref.data).to.be.a('object');
+    });
+  });
+
+  describe('moneris.kountInquire', () => {
+    it('Should return an incomplete score', async () => {
+      const res = await moneris.kountInquire({
+        kount_merchant_id: '760000',
+        kount_api_key: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI3NjAwMDAiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNTU4MDQwODQ5LCJzY3AiOnsia2EiOm51bGwsImtjIjpmYWxzZSwiYXBpIjp0cnVlLCJyaXMiOnRydWV9fQ.y3_2yzd11-Y_F6_xzVsXI-NO1a7P6ldMjDnKzl5yBko', // 214 character max - This is a UNIQUE local identifier used by the merchant to identify the kount inquiry request
+        order_id: 'nqa-orderidkount-1-gab-1',
+        call_center_ind: 'n',
+        currency: 'CAD',
+        email: 'gsierra@lenordik.com',
+        auto_number_id: 'NQA-X1',
+        // 'payment_token': '3B1C19fgfRObNHaQh5qVCpRW2',
+        payment_token: '4242424242424242',
+        payment_type: 'CARD',
+        ip_address: '192.168.2.1',
+        session_id: 'xjudq804i1049jkjakdad',
+        website_id: 'DEFAULT',
+        amount: 100,
+        avs_response: 'M',
+        cvd_response: 'M',
+        prod_type_1: 1,
+        prod_item_1: 'massage',
+        prod_desc_1: 'Massage 1',
+        prod_quant_1: '1',
+        prod_price_1: '100',
+      });
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).to.eql(true);
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res.msg).to.eql('Success');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+      expect(res.data).to.have.property('kountInfo');
+      expect(res.data.kountInfo).to.be.a('object');
+      expect(res.data).to.have.property('kountResult');
+      expect(res.data.kountResult).to.eql('A');
+      expect(res.data).to.have.property('kountScore');
+      expect(res.data.kountScore).to.eql('71');
+      expect(res.data).to.have.property('kountTransactionId');
+      expect(res.data.kountTransactionId).to.not.be.a('null');
+      expect(res.data).to.have.property('receipt');
+      expect(res.data.receipt).to.not.be.a('null');
+      expect(res.data.receipt).to.eql('nqa-orderidkount-1-gab-1');
+    });
+  });
+  describe('moneris.kountUpdate', () => {
+    it('Should update a kount risk inquiry', async () => {
+      const inquiryObject = {
+        kount_merchant_id: '760000',
+        kount_api_key: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI3NjAwMDAiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNTU4MDQwODQ5LCJzY3AiOnsia2EiOm51bGwsImtjIjpmYWxzZSwiYXBpIjp0cnVlLCJyaXMiOnRydWV9fQ.y3_2yzd11-Y_F6_xzVsXI-NO1a7P6ldMjDnKzl5yBko', // 214 character max - This is a UNIQUE local identifier used by the merchant to identify the kount inquiry request
+        order_id: 'nqa-orderidkount-1-gab-1',
+        call_center_ind: 'n',
+        currency: 'CAD',
+        email: 'kount@test.com',
+        auto_number_id: 'NQA-X1',
+        payment_token: '4242424242424242',
+        payment_type: 'CARD',
+        ip_address: '192.168.2.1',
+        session_id: 'xjudq804i1049jkjakdad',
+        website_id: 'DEFAULT',
+        amount: 100,
+        avs_response: 'M',
+        cvd_response: 'M',
+        prod_type_1: 1,
+        prod_item_1: 'massage',
+        prod_desc_1: 'Massage 1',
+        prod_quant_1: '1',
+        prod_price_1: '100',
+      };
+      const res = await moneris.kountInquire(inquiryObject);
+      expect(res).to.be.a('object');
+      expect(res).to.have.property('isSuccess');
+      expect(res.isSuccess).to.be.a('boolean');
+      expect(res.isSuccess).to.eql(true);
+      expect(res).to.have.property('msg');
+      expect(res.msg).to.be.a('string');
+      expect(res.msg).to.eql('Success');
+      expect(res).to.have.property('data');
+      expect(res.data).to.be.a('object');
+      expect(res.data).to.have.property('kountInfo');
+      expect(res.data.kountInfo).to.be.a('object');
+      expect(res.data).to.have.property('kountResult');
+      expect(res.data.kountResult).to.eql('A');
+      expect(res.data).to.have.property('kountScore');
+      expect(res.data.kountScore).to.eql('71');
+      expect(res.data).to.have.property('kountTransactionId');
+      expect(res.data.kountTransactionId).to.not.be.a('null');
+      expect(res.data).to.have.property('receipt');
+      expect(res.data.receipt).to.not.be.a('null');
+      expect(res.data.receipt).to.eql('nqa-orderidkount-1-gab-1');
+
+      const updateResult = await moneris.kountUpdate({
+        kount_merchant_id: '760000',
+        kount_api_key: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI3NjAwMDAiLCJhdWQiOiJLb3VudC4xIiwiaWF0IjoxNTU4MDQwODQ5LCJzY3AiOnsia2EiOm51bGwsImtjIjpmYWxzZSwiYXBpIjp0cnVlLCJyaXMiOnRydWV9fQ.y3_2yzd11-Y_F6_xzVsXI-NO1a7P6ldMjDnKzl5yBko', // 214 character max - This is a UNIQUE local identifier used by the merchant to identify the kount inquiry request
+        order_id: inquiryObject.order_id,
+        session_id: inquiryObject.session_id,
+        kount_transaction_id: res.data.kountTransactionId,
+        avs_response: 'M',
+        cvd_response: 'M',
+        paymentResponse: 'A',
+      });
+      expect(updateResult).to.be.a('object');
+      expect(updateResult).to.have.property('isSuccess');
+      expect(updateResult.isSuccess).to.be.a('boolean');
+      expect(updateResult.isSuccess).to.eql(true);
+      expect(updateResult).to.have.property('msg');
+      expect(updateResult.msg).to.be.a('string');
+      expect(updateResult.msg).to.eql('Success');
+      expect(updateResult).to.have.property('data');
+      expect(updateResult.data).to.be.a('object');
+      expect(updateResult.data).to.have.property('kountInfo');
+      expect(updateResult.data.kountInfo).to.be.a('object');
+      expect(updateResult.data).to.have.property('kountTransactionId');
+      expect(updateResult.data.kountTransactionId).to.not.be.a('null');
+      expect(updateResult.data.kountTransactionId).to.eql(res.data.kountTransactionId);
+      expect(updateResult.data).to.have.property('receipt');
+      expect(updateResult.data.receipt).to.not.be.a('null');
+      expect(updateResult.data.receipt).to.eql(res.data.receipt);
+    });
+  });
+
 });

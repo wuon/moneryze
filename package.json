@@ -1,6 +1,6 @@
 {
   "name": "moneryze",
-  "version": "1.0.4",
+  "version": "1.0.8",
   "description": "Promise based wrapper for the Moneris API",
   "main": "index.js",
   "files": [
@@ -18,19 +18,20 @@
   "author": "wuon@protonmail.com",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bluebird": "^3.4.7",
+    "change-case": "^4.1.2",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
-    "coveralls": "^3.0.3",
-    "eslint": "^5.15.3",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "nyc": "^13.3.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "mocha": "^6.0.2",
-    "eslint-config-airbnb": "^17.1.0"
+    "coveralls": "^3.0.3",
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0"
   }
 }
