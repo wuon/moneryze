@@ -1,6 +1,6 @@
 {
   "name": "moneryze",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Promise based wrapper for the Moneris API",
   "main": "index.js",
   "files": [

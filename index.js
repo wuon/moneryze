@@ -229,9 +229,14 @@ const send = async (data, type, configuration) => {
   }
   let hostPrefix = prefix;
   let filePrefix = prefix;
+
+  if (configuration.test !== undefined || configuration.test !== null) {
+    config.test = configuration.test;
+  }
   if (config.test) {
     hostPrefix += 'TEST_';
   }
+
   if (type === 'acs' || type === 'txn') {
     filePrefix += 'MPI_';
   }
