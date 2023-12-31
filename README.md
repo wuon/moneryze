@@ -1,7 +1,8 @@
 # moneryze
 
 [![NPM version](https://img.shields.io/npm/v/moneryze.svg)](https://www.npmjs.com/package/moneryze)&nbsp;
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)&nbsp;
+[![codecov](https://codecov.io/gh/Wuon/moneryze/graph/badge.svg?token=U7YVG4K6K3)](https://codecov.io/gh/Wuon/moneryze)
 
 > A wrapper to access the Moneris API, forked from AlejandroEsquivel's great work ([AlejandroEsquivel/moneris-js](https://github.com/AlejandroEsquivel/moneris-js)), which was also based on shaynair's original implementation ([shaynair/moneris-js](https://github.com/shaynair/moneris-js))
 
