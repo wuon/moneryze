@@ -1,15 +1,11 @@
 # moneryze
 
-**Currently only supports vault transactions, more will be added soon**
-
 [![NPM version](https://img.shields.io/npm/v/moneryze.svg)](https://www.npmjs.com/package/moneryze)&nbsp;
-[![Build Status](https://travis-ci.org/Wuon/moneryze.svg?branch=master)](https://travis-ci.org/Wuon/moneryze)&nbsp;
-[![Coverage Status](https://coveralls.io/repos/github/Wuon/moneryze/badge.svg?branch=master)](https://coveralls.io/github/Wuon/moneryze?branch=master)&nbsp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> A wrapper to access the Moneris API, forked from AlejandroEsquivel's great work (AlejandroEsquivel/moneris-js), forked from shaynair's great work (shaynair/moneris-js)
+> A wrapper to access the Moneris API, forked from AlejandroEsquivel's great work ([AlejandroEsquivel/moneris-js](https://github.com/AlejandroEsquivel/moneris-js)), which was also based on shaynair's original implementation ([shaynair/moneris-js](https://github.com/shaynair/moneris-js))
 
-> The hope for this module is to create clean, robust, promise wrapped queries that extend just beyond payments. Shaynair's work supported generalized queries to Moneris, Alejandro's work handled the imperfect formatting. My hope is to extend and complete the wrapper, transforming the project into something easy to implement by any developer.
+> The hope for this module is to create clean, robust, promise wrapped queries which modernize the original implementations from predecessors. Shaynair's work supported generalized queries to Moneris, and Alejandro's work handled the imperfect formatting. My hope is to extend and complete the wrapper, transforming the project into something easy to implement by any developer.
 
 [Installation](#installation) |
 [Usage](#usage) |
@@ -21,125 +17,58 @@
 With [npm](https://npmjs.org/):
 
 ```bash
-npm install moneryze --save
+npm install moneryze
 ```
 
-Note: You need **an engine that supports ES6 (e.g. Babel or Node 4.0+)**.
+Note: The minimum node version to utilize this package is v18.x.x
 
 ## General Usage
 
-**`const moneris = require('moneryze');`**
+```typescript
+import { Moneryze } from "moneryze";
 
-Queries the Moneris API with the information provided.
+const moneryze = new Moneryze({
+  appName: "Test",
+  storeId: "store5",
+  apiToken: "yesguy",
+  cryptType: "7",
+  isTest: true,
+  countryCode: "CA",
+});
 
-- `config`: **Required.** An object with the following fields.
-  - `app_name`: Optional. If given, will add `app_name` as a prefix to receipt names.
-  - `api_token`: **Required.** Your API token.
-  - `store_id`: **Required.** Your store ID.
-  - `crypt_type`: Optional. If given, will set the default crypt_type for all transactions. `7` by default.
-  - `test`: Optional. If true, uses Moneris Test endpoints. You can get a `api_token` and `store_id` for this endpoint from Moneris's Documentation. `false` by default.
-
-.init() must be called before any other operation, otherwise an error will be thrown
-
-## Examples
-
-### .init()
-
-```bash
-moneris.init({
-  app_name: 'Test',
-  store_id: 'store5',
-  api_token: 'yesguy',
-  crypt_type: '7',
-  test: true,
+moneryze.send("res_add_cc", {
+  pan: "4242424242424242",
+  expdate: "2011",
 });
 ```
 
-### .resAddCC()
+To see more examples, look [here](https://github.com/Wuon/moneryze/tree/main/examples).
 
-- `pan`: **Required.** Card number.
-- `expdate`: **Required.** Expiry date of the card.
+## Configuration options
 
-```bash
-moneris.resAddCC({
-  pan: '4242424242424242',
-  expdate: '2011',
-});
+```typescript
+export type MoneryzeConfig = {
+  appName?: string;
+  storeId: string;
+  apiToken: string;
+  cryptType?: string;
+  isTest?: boolean;
+  countryCode: Country;
+};
+
+const config: MoneryzeConfig = {
+  // Describe options here!
+};
+
+const moneryze = new Moneryze(config);
 ```
 
-### .resPurchaseCC()
-
-- `token`: **Required.** Customer's moneris token.
-- `amount`: **Required.** Amount to charge.
-- `description`: Optional. A short message attached to the purchase.
-
-```bash
-moneris.resPurchaseCC({
-  token: 'D8WyyItuNb6mHn4biiPqAwM42',
-  amount: 11.98,
-  description: 'bubble tea',
-});
-```
-
-### .purchase()
-
-- `pan`: **Required.** Card number.
-- `expdate`: **Required.** Expiry date of the card.
-- `amount`: **Required.** Amount to charge.
-- `description`: Optional. A short message attached to the purchase.
-
-```bash
-moneris.resPurchaseCC({
-  pan: '4242424242424242',
-  expdate: '2011',
-  amount: 11.98,
-  description: 'bubble tea',
-});
-```
-
-### .refund()
-
-- `order_id`: **Required.** The ID of the order from the transaction.
-- `txn_number`: **Required.**. The number from the transaction.
-- `amount`: **Required.** Amount to refund.
-
-```bash
-moneris.refund({
-  order_id: 'mvt2713618548',
-  txn_number: '911464-0_10',
-  amount: 11.98,
-});
-```
-
-### .preauth()
-
-- `order_id`: **Required.** The ID of the order for the preauthorization.
-- `amount`: **Required.** Amount to preauthorize.
-- `pan`: **Required.** Card number.
-- `expdate`: **Required.** Expiry date of the card.
-
-```bash
-moneris.refund({
-  order_id: 'mvt2713618548',
-  amount: 11.98,
-  pan: '4242424242424242',
-  expdate: '2011'
-});
-```
-
-### .completion()
-
-- `order_id`: **Required.** The ID of the order for the preauthorization.
-- `amount`: **Required.** Completion amount.
-- `txn_number`: **Required.**. The number from the transaction.
-
-```bash
-moneris.completion({
-  order_id: 'mvt2713618548',
-  amount: 11.98,
-  txn_number: '911464-0_10',
-});
-```
+- `appName`: Optional. If given, will add `appName` as a prefix to receipt names (eg: `Test-Purchase-1703974946117-1529`). Will default to `moneryze` if not specified.
+- `apiToken`: **Required.** Your API token.
+- `storeId`: **Required.** Your store ID.
+- `cryptType`: Optional. If given, will set the default crypt_type for all transactions. `7` by default.
+- `isTest`: Optional. If true, uses Moneris Test endpoints. You can get a `api_token` and `store_id` for this endpoint from Moneris's Documentation. `false` by default.
+- `countryCode`: **Required**. Defines the region in which endpoint to interface with Moneris. Currently only suppports `CA` (Canada) or `US` (United States).
 
 ## License
 
@@ -147,6 +76,6 @@ moneris.completion({
 
 ## Notes
 
-With love and passion,
+Appreciate the support 🫡
 
 wuon
