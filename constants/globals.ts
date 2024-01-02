@@ -1,0 +1,10 @@
+export const PROTOCOL = "https";
+export const PORT = 443;
+export const HOST = "www3.moneris.com";
+export const TEST_HOST = "esqa.moneris.com";
+export const US_HOST = "esplusqa.moneris.com";
+export const FILE = "/gateway2/servlet/MpgRequest";
+export const US_FILE = "/gateway_us/servlet/MpgRequest";
+export const MPI_FILE = "/mpi/servlet/MpiServlet";
+export const API_VERSION = '"API_VERSION": "PHP NA - 1.2.3"';
+export const CLIENT_TIMEOUT = 30;
