@@ -13,9 +13,7 @@ import {
   US_FILE,
   US_HOST,
 } from "../constants/globals";
-import { TransactionType } from "./types";
-
-export type Country = "CA" | "US";
+import { TransactionType, Country } from "./types";
 
 export type MoneryzeConfig = {
   appName?: string;
@@ -35,6 +33,10 @@ export const DEFAULT_MONERYZE_CONFIG = {
 export class Moneryze {
   private readonly _config: MoneryzeConfig;
 
+  /**
+   * Create a new Moneryze instance.
+   * @param config - The configuration for this Moneryze instance.
+   */
   constructor(config: MoneryzeConfig) {
     this._config = {
       ...DEFAULT_MONERYZE_CONFIG,
@@ -42,6 +44,21 @@ export class Moneryze {
     };
   }
 
+  /**
+   * Interfaces with the Moneris host specified in the config.
+   * @param type - The type of the transaction to send.
+   * @param data - The data / body of the transaction / request.
+   * @returns The result of the transaction / request.
+   *
+   * @example
+   * ```ts
+   * // Sends a request using the 'res_add_cc' transaction type.
+   * moneryze.send("res_add_cc", {
+   *   pan: "4242424242424242",
+   *   expdate: "2011",
+   * });
+   * ```
+   */
   async send(type: TransactionType, data: any) {
     const suffix = `${new Date().getTime()}-${Math.ceil(
       Math.random() * 10000

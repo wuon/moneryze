@@ -22,7 +22,7 @@
     "node": ">=18.19.0",
     "npm": ">=10.2.3"
   },
-  "author": "wuon@protonmail.com",
+  "author": "hello@wuon.io",
   "license": "MIT",
   "dependencies": {
     "xml-js": "^1.6.11"

@@ -1,3 +1,5 @@
+export type Country = "CA" | "US";
+
 export type TransactionType =
   // Basic
   | "batchclose"
