@@ -5,11 +5,20 @@
 ![Codecov](https://img.shields.io/codecov/c/github/wuon/moneryze)&nbsp;
 ![npm](https://img.shields.io/npm/dy/moneryze)
 
-> A wrapper to access the Moneris API, forked from AlejandroEsquivel's great work ([AlejandroEsquivel/moneris-js](https://github.com/AlejandroEsquivel/moneris-js)), which was also based on shaynair's original implementation ([shaynair/moneris-js](https://github.com/shaynair/moneris-js)). The hope for this module is to create clean, robust, promise wrapped queries which modernize the original implementations from predecessors. Shaynair's work supported generalized queries to Moneris, and Alejandro's work handled the imperfect formatting. My hope is to extend and complete the wrapper, transforming the project into something easy to implement by any developer.
-
+[Introduction](#introduction) |
 [Installation](#installation) |
 [Usage](#usage) |
-[License](#license)
+[License](#license) |
+[tsdocs.dev](https://tsdocs.dev/docs/moneryze/)
+
+> [!IMPORTANT]  
+> Moneryze v2.x.x is out! There are some major changes which include typescript support and removing the limitation(s) on the previous supported transactions. See the full changelog [here](https://github.com/wuon/moneryze/releases).
+
+## Introduction
+
+A wrapper to access the Moneris API, forked from AlejandroEsquivel's great work ([AlejandroEsquivel/moneris-js](https://github.com/AlejandroEsquivel/moneris-js)), which was also based on shaynair's original implementation ([shaynair/moneris-js](https://github.com/shaynair/moneris-js)).
+
+The hope for this module is to create clean, robust, promise wrapped queries which modernize the original implementations from predecessors. Shaynair's work supported generalized queries to Moneris, and Alejandro's work handled the imperfect formatting. My hope is to extend and complete the wrapper, transforming the project into something easy to implement by any developer.
 
 ## Installation
 
@@ -19,7 +28,8 @@ With [npm](https://npmjs.org/):
 npm install moneryze
 ```
 
-Note: The minimum node version to utilize this package is v18.x.x
+> [!NOTE]
+> The minimum node version to utilize this package is v18.x.x
 
 ## Usage
 
@@ -73,10 +83,4 @@ const moneryze = new Moneryze(config);
 
 ## License
 
-[MIT](http://g14n.info/mit-license)
-
-## Notes
-
-Thanks for supporting this package! 🫡
-
-wuon
+MIT © wuon
