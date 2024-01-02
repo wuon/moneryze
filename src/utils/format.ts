@@ -46,6 +46,7 @@ export const format = (data: any, sanitize = true): Response => {
   response.kountTransactionId = fe(data.KountTransactionId);
   response.message = fe(data.Message);
   response.timedOut = fe(data.TimedOut);
+  response.issuerId = fe(data.IssuerId);
 
   if (sanitize) {
     if (response.resolveData?.maskedPan) {

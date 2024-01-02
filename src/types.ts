@@ -241,44 +241,45 @@ export type TransactionType =
   | string;
 
 export type ResponseData = {
-  referenceNum?: string;
-  dataKey?: string;
-  iso?: string;
-  receiptId?: string;
-  avsResultCode?: string;
-  cvdResultCode?: string;
-  cardType?: string;
-  isVisaDebit?: string;
-  responseCode?: string;
   authCode?: string;
-  transDate?: string;
-  transTime?: string;
-  transAmount?: string;
-  transId?: string;
-  transType?: string;
+  avsResultCode?: string;
+  cardType?: string;
   complete?: string;
-  paymentType?: string;
-  resSuccess?: string;
   corporateCard?: string;
-  recurSuccess?: string;
-  resolveData?: {
-    custId?: string;
-    phone?: string;
-    email?: string;
-    note?: string;
-    avsStreetNumber?: string;
-    avsStreetName?: string;
-    avsZipcode?: string;
-    maskedPan?: string;
-    expdate?: string;
-    cryptType?: string;
-  };
+  cvdResultCode?: string;
+  dataKey?: string;
+  isVisaDebit?: string;
+  issuerId?: string;
   kountInfo?: string;
   kountResult?: string;
   kountScore?: string;
   kountTransactionId?: string;
   message?: string;
+  paymentType?: string;
+  receiptId?: string;
+  referenceNum?: string;
+  recurSuccess?: string;
+  resSuccess?: string;
+  resolveData?: {
+    avsStreetName?: string;
+    avsStreetNumber?: string;
+    avsZipcode?: string;
+    cryptType?: string;
+    custId?: string;
+    email?: string;
+    expdate?: string;
+    maskedPan?: string;
+    note?: string;
+    phone?: string;
+  };
+  responseCode?: string;
+  iso?: string;
   timedOut?: string;
+  transAmount?: string;
+  transDate?: string;
+  transId?: string;
+  transTime?: string;
+  transType?: string;
 };
 
 export type Response = {
