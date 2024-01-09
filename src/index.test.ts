@@ -46,4 +46,48 @@ describe("Moneryze", () => {
     expect(mockFetch).toHaveBeenCalled();
     expect(response).toBeDefined();
   });
+
+  describe("resAddCC", () => {
+    it("should send a res_add_cc transaction with default values", async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        text: jest
+          .fn()
+          .mockResolvedValue("<response><receipt></receipt></response>"),
+      });
+      global.fetch = mockFetch;
+
+      const data = {
+        pan: "testPan",
+        expdate: "testExpdate",
+      };
+
+      const response = await instance.resAddCC(data);
+
+      expect(mockFetch).toHaveBeenCalled();
+      expect(response).toBeDefined();
+    });
+
+    it("should send a res_add_cc transaction with provided values", async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        text: jest
+          .fn()
+          .mockResolvedValue("<response><receipt></receipt></response>"),
+      });
+      global.fetch = mockFetch;
+
+      const data = {
+        pan: "testPan",
+        expdate: "testExpdate",
+        crypt_type: "testCryptType",
+        avs_street_number: "testAvsStreetNumber",
+        avs_street_name: "testAvsStreetName",
+        avs_zipcode: "testAvsZipcode",
+      };
+
+      const response = await instance.resAddCC(data);
+
+      expect(mockFetch).toHaveBeenCalled();
+      expect(response).toBeDefined();
+    });
+  });
 });
