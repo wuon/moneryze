@@ -240,10 +240,32 @@ export type TransactionType =
   // Future proofing for new transaction types
   | string;
 
+export type CofInfo = {
+  paymentIndicator?: string;
+  paymentInformation?: string;
+  issuerId?: string;
+};
+
+export type AvsInfo = {
+  avsStreetName?: string;
+  avsStreetNumber?: string;
+  avsZipcode?: string;
+  cryptType?: string;
+  custId?: string;
+  email?: string;
+  expdate?: string;
+  maskedPan?: string;
+  note?: string;
+  phone?: string;
+};
+
+export type RequestData = ResAddCCRequest;
+
 export type ResponseData = {
   authCode?: string;
   avsResultCode?: string;
   cardType?: string;
+  cofInfo?: CofInfo;
   complete?: string;
   corporateCard?: string;
   cvdResultCode?: string;
@@ -260,18 +282,7 @@ export type ResponseData = {
   referenceNum?: string;
   recurSuccess?: string;
   resSuccess?: string;
-  resolveData?: {
-    avsStreetName?: string;
-    avsStreetNumber?: string;
-    avsZipcode?: string;
-    cryptType?: string;
-    custId?: string;
-    email?: string;
-    expdate?: string;
-    maskedPan?: string;
-    note?: string;
-    phone?: string;
-  };
+  resolveData?: AvsInfo;
   responseCode?: string;
   iso?: string;
   timedOut?: string;
@@ -282,9 +293,37 @@ export type ResponseData = {
   transType?: string;
 };
 
-export type Response = {
+export type Response<T> = {
   isSuccess: boolean;
   code?: string;
   message: string;
-  data: ResponseData;
+  data: T;
 };
+
+export type ResAddCCRequest = {
+  custId?: string;
+  phone?: string;
+  email?: string;
+  note?: string;
+  pan: string;
+  expdate: string;
+  cryptType?: string;
+  dataKeyFormat?: string;
+  avsInfo?: Pick<AvsInfo, "avsStreetName" | "avsStreetNumber" | "avsZipcode">;
+  cofInfo?: Pick<CofInfo, "issuerId">;
+};
+
+export type ResAddCCResponse = Pick<
+  ResponseData,
+  | "dataKey"
+  | "responseCode"
+  | "message"
+  | "transDate"
+  | "transTime"
+  | "complete"
+  | "timedOut"
+  | "resSuccess"
+  | "paymentType"
+  | "cofInfo"
+  | "resolveData"
+>;

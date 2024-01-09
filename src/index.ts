@@ -13,7 +13,18 @@ import {
   US_FILE,
   US_HOST,
 } from "../constants/globals";
-import { TransactionType, Country } from "./types";
+import {
+  TransactionType,
+  Country,
+  ResAddCCRequest,
+  ResAddCCResponse,
+  Response,
+} from "./types";
+import {
+  pascalToCamelCase,
+  camelToSnakeCase,
+  snakeToCamelCase,
+} from "./utils/format";
 
 export type MoneryzeConfig = {
   appName?: string;
@@ -22,12 +33,14 @@ export type MoneryzeConfig = {
   cryptType?: string;
   isTest?: boolean;
   countryCode: Country;
+  statusCheck?: boolean;
 };
 
 export const DEFAULT_MONERYZE_CONFIG = {
   appName: "moneryze",
   cryptType: "7",
   isTest: false,
+  statusCheck: false,
 };
 
 export class Moneryze {
@@ -59,7 +72,7 @@ export class Moneryze {
    * });
    * ```
    */
-  async send(type: TransactionType, data: any) {
+  async send(type: TransactionType, data: any): Promise<Response<any>> {
     const suffix = `${new Date().getTime()}-${Math.ceil(
       Math.random() * 10000
     )}`;
@@ -110,9 +123,11 @@ export class Moneryze {
     }
 
     const body: any = {
-      store_id: this._config.storeId,
-      api_token: this._config.apiToken,
+      storeId: this._config.storeId,
+      apiToken: this._config.apiToken,
+      statusCheck: this._config.statusCheck ?? false,
     };
+
     if (type === "attribute_query" || type === "session_query") {
       body.risk = {};
       body.risk[type] = out;
@@ -148,6 +163,7 @@ export class Moneryze {
       body: convert.js2xml(wrapInRequestField(body), {
         compact: true,
         spaces: 4,
+        elementNameFn: (val) => camelToSnakeCase(val),
       }),
       headers: {
         "User-Agent": API_VERSION,
@@ -157,11 +173,21 @@ export class Moneryze {
     });
 
     const xmlResponse = await response.text();
-    const jsonResponse = convert.xml2js(xmlResponse, { compact: true }) as any;
+
+    const jsonResponse = convert.xml2js(xmlResponse, {
+      compact: true,
+      elementNameFn: (val) =>
+        val.includes("_") ? snakeToCamelCase(val) : pascalToCamelCase(val),
+    }) as any;
+
     const receipt = Array.isArray(jsonResponse.response.receipt)
       ? jsonResponse.response.receipt[0]
       : jsonResponse.response.receipt;
 
     return format(receipt, !sudo.has(type));
+  }
+
+  async resAddCC(data: ResAddCCRequest): Promise<Response<ResAddCCResponse>> {
+    return this.send("res_add_cc", data);
   }
 }
