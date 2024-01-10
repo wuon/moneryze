@@ -90,4 +90,26 @@ describe("Moneryze", () => {
       expect(response).toBeDefined();
     });
   });
+
+  describe("resTempAdd", () => {
+    it("should send a res_temp_add transaction", async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        text: jest
+          .fn()
+          .mockResolvedValue("<response><receipt></receipt></response>"),
+      });
+      global.fetch = mockFetch;
+
+      const data = {
+        pan: "testPan",
+        expdate: "testExpdate",
+        duration: "testDuration",
+      };
+
+      const response = await instance.resTempAdd(data);
+
+      expect(mockFetch).toHaveBeenCalled();
+      expect(response).toBeDefined();
+    });
+  });
 });

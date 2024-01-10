@@ -257,9 +257,10 @@ export type AvsInfo = {
   maskedPan?: string;
   note?: string;
   phone?: string;
+  anc1?: string;
 };
 
-export type RequestData = ResAddCCRequest;
+export type RequestData = ResAddCCRequest | ResTempAddRequest;
 
 export type ResponseData = {
   authCode?: string;
@@ -325,5 +326,28 @@ export type ResAddCCResponse = Pick<
   | "resSuccess"
   | "paymentType"
   | "cofInfo"
+  | "resolveData"
+>;
+
+export type ResTempAddRequest = {
+  pan: string;
+  expdate: string;
+  cryptType?: string;
+  // The duration, or lifetime, of the temporary token can be set to be a maximum of 15 minutes.
+  duration: string;
+  dataKeyFormat?: string;
+};
+
+export type ResTempAddResponse = Pick<
+  ResponseData,
+  | "dataKey"
+  | "responseCode"
+  | "message"
+  | "transDate"
+  | "transTime"
+  | "complete"
+  | "timedOut"
+  | "resSuccess"
+  | "paymentType"
   | "resolveData"
 >;
