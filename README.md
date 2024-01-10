@@ -33,6 +33,23 @@ npm install moneryze
 
 ## Usage
 
+### Supported transactions
+
+The supported transactions are properly typed and matched to the official Moneris PHP examples shown [here](https://github.com/Moneris/eCommerce-Unified-API-PHP/tree/master/Examples/CA). Since the transactions' request and response are typed, they are manually reviewed and will be updated progressively overtime. These can be accessed via the `Moneryze` class directly (eg: `moneryze.resAddCC(...)`).
+
+View the table below for the official support.
+
+| Transaction  | Request         | Response         | Example |
+| ------------ | --------------- | ---------------- | ------- |
+| `red_add_cc` | ResAddCCRequest | ResAddCCResponse | link    |
+
+### Freeform
+
+The freeform usage allows developers to interface freely with the Moneris API. The developer is responsible for constructing the payload and providing the correct transaction type. Follow the example below to see it being performed on the `res_add_cc` transaction.
+
+> [!NOTE]
+> To see the full list of what can be interfaced, it is highly recommended you examine the integration guide from Moneris [here](https://github.com/Moneris/eCommerce-Unified-API-PHP/blob/master/Unified-API-IG-PHP-v1.6.3.pdf).
+
 ```typescript
 import { Moneryze } from "moneryze";
 
@@ -51,10 +68,6 @@ moneryze.send("res_add_cc", {
 });
 ```
 
-To see the full list of what can be interfaced, it is highly recommended you examine the integration guide from Moneris [here](https://github.com/Moneris/eCommerce-Unified-API-PHP/blob/master/Unified-API-IG-PHP-v1.6.3.pdf).
-
-To see some integration examples with this library, look [here](https://github.com/Wuon/moneryze/tree/main/examples).
-
 ### Configuration options
 
 ```typescript
@@ -65,6 +78,7 @@ export type MoneryzeConfig = {
   cryptType?: string;
   isTest?: boolean;
   countryCode: Country;
+  statusCheck?: boolean;
 };
 
 const config: MoneryzeConfig = {
@@ -80,6 +94,7 @@ const moneryze = new Moneryze(config);
 - `cryptType`: Optional. If given, will set the default crypt_type for all transactions. `7` by default.
 - `isTest`: Optional. If true, uses Moneris Test endpoints. You can get a `api_token` and `store_id` for this endpoint from Moneris's Documentation. `false` by default.
 - `countryCode`: **Required**. Defines the region in which endpoint to interface with Moneris. Currently only suppports `CA` (Canada) or `US` (United States).
+- `statusCheck`: Optional. Unsure what this does [here](https://github.com/Moneris/eCommerce-Unified-API-PHP/blob/1c9ce57047e3a17636b68d5f58f41d906c54b347/mpgClasses.php#L287)
 
 ## License
 
