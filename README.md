@@ -35,12 +35,12 @@ npm install moneryze
 
 ### Supported transactions
 
-The supported transactions are properly typed and matched to the official Moneris PHP examples shown [here](https://github.com/Moneris/eCommerce-Unified-API-PHP/tree/master/Examples/CA). Since the transactions' request and response are typed, they are manually reviewed and will be updated progressively overtime. These can be accessed via the `Moneryze` class directly (eg: `moneryze.resAddCC(...)`).
+The supported transactions are properly typed and matched to the official Moneris PHP examples shown [here](https://github.com/Moneris/eCommerce-Unified-API-PHP/tree/master/Examples/CA). Since the transactions' request and response are typed, they are manually reviewed and will be updated progressively overtime. These can be accessed via the `Moneryze` class directly (eg: `res_add_cc` can be accessed via `moneryze.resAddCC()`).
 
 View the table below for the official support.
 
-| Transaction  | Request         | Response         | Example |
-| ------------ | --------------- | ---------------- | ------- |
+| Transaction  | Request Type    | Response Type    | Example |
+| :----------- | :-------------- | :--------------- | :------ |
 | `red_add_cc` | ResAddCCRequest | ResAddCCResponse | link    |
 
 ### Freeform
