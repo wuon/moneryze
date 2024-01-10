@@ -41,8 +41,8 @@ View the table below for the official support.
 
 | Transaction    | Request Type      | Response Type      | Example                                                                         |
 | :------------- | :---------------- | :----------------- | :------------------------------------------------------------------------------ |
-| `red_add_cc`   | ResAddCCRequest   | ResAddCCResponse   | [link](https://github.com/wuon/moneryze/blob/main/examples/vault/resAddCC.ts)   |
-| `red_temp_add` | ResTempAddRequest | ResTempAddResponse | [link](https://github.com/wuon/moneryze/blob/main/examples/vault/resTempAdd.ts) |
+| `res_add_cc`   | ResAddCCRequest   | ResAddCCResponse   | [link](https://github.com/wuon/moneryze/blob/main/examples/vault/resAddCC.ts)   |
+| `res_temp_add` | ResTempAddRequest | ResTempAddResponse | [link](https://github.com/wuon/moneryze/blob/main/examples/vault/resTempAdd.ts) |
 
 ### Freeform
 
