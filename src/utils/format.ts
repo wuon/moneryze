@@ -1,56 +1,65 @@
-import { Response, ResponseData } from "../types";
+import { AvsInfo, CofInfo, Response, ResponseData } from "../types";
 import { cleanse } from "./cleanse";
 
-const fe = (obj: any) => obj?._text;
+type TextNode = {
+  _text: string;
+};
 
-export const format = (data: any, sanitize = true): Response => {
+type AvsInfoNode = {
+  [K in keyof AvsInfo]: TextNode;
+};
+
+type CofInfoNode = {
+  [K in keyof CofInfo]: TextNode;
+};
+
+export const snakeToCamelCase = (val: string): string =>
+  val
+    .toLowerCase()
+    .replace(/[-_][a-z]/g, (group) => group.slice(-1).toUpperCase());
+
+export const camelToSnakeCase = (val: string): string =>
+  val.replace(/([A-Z])/g, "_$1").toLowerCase();
+
+export const pascalToCamelCase = (val: string): string =>
+  val.charAt(0).toLowerCase() + val.slice(1);
+
+export const format = (
+  data: {
+    [K in keyof ResponseData]: TextNode | AvsInfoNode | CofInfoNode;
+  } & { iSO?: TextNode },
+  sanitize = true
+): Response<any> => {
   const response: ResponseData = {};
 
-  response.referenceNum = fe(data.ReferenceNum);
-  response.dataKey = fe(data.DataKey);
-  response.iso = fe(data.ISO);
-  response.receiptId = fe(data.ReceiptId);
-  response.avsResultCode = fe(data.AvsResultCode);
-  response.cvdResultCode = fe(data.CvdResultCode);
-  response.cardType = fe(data.CardType);
-  response.isVisaDebit = fe(data.IsVisaDebit);
-  response.responseCode = fe(data.ResponseCode);
-  response.authCode = fe(data.AuthCode);
-  response.transDate = fe(data.TransDate);
-  response.transTime = fe(data.TransTime);
-  response.transAmount = fe(data.TransAmount);
-  response.transId = fe(data.TransID);
-  response.transType = fe(data.TransType);
-  response.complete = fe(data.Complete);
-  response.paymentType = fe(data.PaymentType);
-  response.resSuccess = fe(data.ResSuccess);
-  response.corporateCard = fe(data.CorporateCard);
-  response.recurSuccess = fe(data.RecurSuccess);
-  response.resolveData = data.ResolveData
-    ? {
-        custId: fe(data.ResolveData.cust_id),
-        phone: fe(data.ResolveData.phone),
-        email: fe(data.ResolveData.email),
-        note: fe(data.ResolveData.note),
-        avsStreetNumber: fe(data.ResolveData.avs_street_number),
-        avsStreetName: fe(data.ResolveData.avs_street_name),
-        avsZipcode: fe(data.ResolveData.avs_zipcode),
-        maskedPan: fe(data.ResolveData.masked_pan),
-        expdate: fe(data.ResolveData.expdate),
-        cryptType: fe(data.ResolveData.crypt_type),
-      }
-    : undefined;
-  response.kountInfo = fe(data.KountInfo);
-  response.kountResult = fe(data.KountResult);
-  response.kountScore = fe(data.KountScore);
-  response.kountTransactionId = fe(data.KountTransactionId);
-  response.message = fe(data.Message);
-  response.timedOut = fe(data.TimedOut);
-  response.issuerId = fe(data.IssuerId);
+  if (data.iSO) {
+    data.iso = data.iSO;
+    delete data.iSO;
+  }
+
+  for (const [key, value] of Object.entries(data)) {
+    response[key as keyof ResponseData] = (value as TextNode)._text;
+  }
+
+  if (data.resolveData) {
+    response.resolveData = {};
+
+    for (const [key, value] of Object.entries(data.resolveData)) {
+      response.resolveData[key as keyof AvsInfo] = (value as TextNode)._text;
+    }
+  }
+
+  if (data.cofInfo) {
+    response.cofInfo = {};
+
+    for (const [key, value] of Object.entries(data.cofInfo)) {
+      response.cofInfo[key as keyof CofInfo] = (value as TextNode)._text;
+    }
+  }
 
   if (sanitize) {
     if (response.resolveData?.maskedPan) {
-      response.resolveData.maskedPan = undefined;
+      response.resolveData.maskedPan = "****************";
     }
   }
 
