@@ -19,6 +19,8 @@ import {
   ResAddCCRequest,
   ResAddCCResponse,
   Response,
+  ResTempAddRequest,
+  ResTempAddResponse,
 } from "./types";
 import {
   pascalToCamelCase,
@@ -189,5 +191,11 @@ export class Moneryze {
 
   async resAddCC(data: ResAddCCRequest): Promise<Response<ResAddCCResponse>> {
     return this.send("res_add_cc", data);
+  }
+
+  async resTempAdd(
+    data: ResTempAddRequest
+  ): Promise<Response<ResTempAddResponse>> {
+    return this.send("res_temp_add", data);
   }
 }
