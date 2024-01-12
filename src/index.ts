@@ -21,6 +21,8 @@ import {
   Response,
   ResTempAddRequest,
   ResTempAddResponse,
+  ResAddTokenRequest,
+  ResAddTokenResponse,
 } from "./types";
 import {
   pascalToCamelCase,
@@ -197,5 +199,11 @@ export class Moneryze {
     data: ResTempAddRequest
   ): Promise<Response<ResTempAddResponse>> {
     return this.send("res_temp_add", data);
+  }
+
+  async resAddToken(
+    data: ResAddTokenRequest
+  ): Promise<Response<ResAddTokenResponse>> {
+    return this.send("res_add_token", data);
   }
 }

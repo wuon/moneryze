@@ -1,5 +1,5 @@
 import { Moneryze, MoneryzeConfig, DEFAULT_MONERYZE_CONFIG } from ".";
-import { TransactionType } from "./types";
+import { ResAddTokenRequest, TransactionType } from "./types";
 
 describe("Moneryze", () => {
   let config: MoneryzeConfig;
@@ -107,6 +107,40 @@ describe("Moneryze", () => {
       };
 
       const response = await instance.resTempAdd(data);
+
+      expect(mockFetch).toHaveBeenCalled();
+      expect(response).toBeDefined();
+    });
+  });
+
+  describe("resAddToken", () => {
+    it("should send a res_add_token transaction with provided values", async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        text: jest
+          .fn()
+          .mockResolvedValue("<response><receipt></receipt></response>"),
+      });
+      global.fetch = mockFetch;
+
+      const data: ResAddTokenRequest = {
+        dataKey: "testDataKey",
+        custId: "customer1",
+        phone: "5555551234",
+        email: "bob@smith.com",
+        note: "this is my note",
+        expdate: "1509",
+        cryptType: "7",
+        avsInfo: {
+          avsStreetNumber: "123",
+          avsStreetName: "lakeshore blvd",
+          avsZipcode: "90210",
+        },
+        cofInfo: {
+          issuerId: "168451306048014",
+        },
+      };
+
+      const response = await instance.resAddToken(data);
 
       expect(mockFetch).toHaveBeenCalled();
       expect(response).toBeDefined();

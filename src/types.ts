@@ -351,3 +351,31 @@ export type ResTempAddResponse = Pick<
   | "paymentType"
   | "resolveData"
 >;
+
+export type ResAddTokenRequest = {
+  dataKey: string;
+  custId?: string;
+  phone?: string;
+  email?: string;
+  note?: string;
+  expdate?: string;
+  dataKeyFormat?: string;
+  cryptType?: string;
+  avsInfo?: Pick<AvsInfo, "avsStreetName" | "avsStreetNumber" | "avsZipcode">;
+  cofInfo?: Pick<CofInfo, "issuerId">;
+};
+
+export type ResAddTokenResponse = Pick<
+  ResponseData,
+  | "dataKey"
+  | "responseCode"
+  | "message"
+  | "transDate"
+  | "transTime"
+  | "complete"
+  | "timedOut"
+  | "resSuccess"
+  | "paymentType"
+  | "issuerId"
+  | "resolveData"
+>;
