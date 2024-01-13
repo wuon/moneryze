@@ -240,6 +240,11 @@ export type TransactionType =
   // Future proofing for new transaction types
   | string;
 
+export type CvdInfo = {
+  cvdIndicator?: string;
+  cvdValue?: string;
+};
+
 export type CofInfo = {
   paymentIndicator?: string;
   paymentInformation?: string;
@@ -269,6 +274,7 @@ export type ResponseData = {
   cofInfo?: CofInfo;
   complete?: string;
   corporateCard?: string;
+  cvdInfo?: CvdInfo;
   cvdResultCode?: string;
   dataKey?: string;
   isVisaDebit?: string;
@@ -277,6 +283,7 @@ export type ResponseData = {
   kountResult?: string;
   kountScore?: string;
   kountTransactionId?: string;
+  networkTokenization?: string;
   message?: string;
   paymentType?: string;
   receiptId?: string;
@@ -378,4 +385,43 @@ export type ResAddTokenResponse = Pick<
   | "paymentType"
   | "issuerId"
   | "resolveData"
+>;
+
+export type ResCardVerificationCCRequest = {
+  dataKey: string;
+  orderId?: string;
+  cryptType?: string;
+  expDate?: string;
+  getNtResponse?: string;
+  cvdInfo?: CvdInfo;
+  avsInfo?: Pick<AvsInfo, "avsStreetName" | "avsStreetNumber" | "avsZipcode">;
+  cofInfo?: CofInfo;
+};
+
+export type ResCardVerificationCCResponse = Pick<
+  ResponseData,
+  | "dataKey"
+  | "receiptId"
+  | "referenceNum"
+  | "responseCode"
+  | "authCode"
+  | "message"
+  | "transTime"
+  | "transDate"
+  | "complete"
+  | "transAmount"
+  | "cardType"
+  | "transId"
+  | "timedOut"
+  | "corporateCard"
+  | "recurSuccess"
+  | "avsResultCode"
+  | "cvdResultCode"
+  | "resSuccess"
+  | "paymentType"
+  | "isVisaDebit"
+  | "resolveData"
+  | "issuerId"
+  | "networkTokenization"
+  | "iso"
 >;

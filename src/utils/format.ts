@@ -1,4 +1,4 @@
-import { AvsInfo, CofInfo, Response, ResponseData } from "../types";
+import { AvsInfo, CofInfo, CvdInfo, Response, ResponseData } from "../types";
 import { cleanse } from "./cleanse";
 
 type TextNode = {
@@ -11,6 +11,10 @@ type AvsInfoNode = {
 
 type CofInfoNode = {
   [K in keyof CofInfo]: TextNode;
+};
+
+type CvdInfoNode = {
+  [K in keyof CvdInfo]: TextNode;
 };
 
 export const snakeToCamelCase = (val: string): string =>
@@ -26,7 +30,11 @@ export const pascalToCamelCase = (val: string): string =>
 
 export const format = (
   data: {
-    [K in keyof ResponseData]: TextNode | AvsInfoNode | CofInfoNode;
+    [K in keyof ResponseData]:
+      | TextNode
+      | AvsInfoNode
+      | CofInfoNode
+      | CvdInfoNode;
   } & { iSO?: TextNode },
   sanitize = true
 ): Response<any> => {
@@ -54,6 +62,14 @@ export const format = (
 
     for (const [key, value] of Object.entries(data.cofInfo)) {
       response.cofInfo[key as keyof CofInfo] = (value as TextNode)._text;
+    }
+  }
+
+  if (data.cvdInfo) {
+    response.cvdInfo = {};
+
+    for (const [key, value] of Object.entries(data.cvdInfo)) {
+      response.cvdInfo[key as keyof CvdInfo] = (value as TextNode)._text;
     }
   }
 

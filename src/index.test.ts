@@ -146,4 +146,27 @@ describe("Moneryze", () => {
       expect(response).toBeDefined();
     });
   });
+
+  describe("resCardVerificationCC", () => {
+    it("should send a res_card_verification_cc transaction with provided values", async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        text: jest
+          .fn()
+          .mockResolvedValue("<response><receipt></receipt></response>"),
+      });
+      global.fetch = mockFetch;
+
+      const data = {
+        dataKey: "testDataKey",
+        pan: "testPan",
+        expdate: "testExpdate",
+        cryptType: "testCryptType",
+      };
+
+      const response = await instance.resCardVerificationCC(data);
+
+      expect(mockFetch).toHaveBeenCalled();
+      expect(response).toBeDefined();
+    });
+  });
 });
