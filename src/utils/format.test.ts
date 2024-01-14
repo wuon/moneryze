@@ -190,6 +190,21 @@ describe("format", () => {
       expect(format(input)).toEqual(expectedOutput);
     });
 
+    it("should handle data with cvdInfo field", () => {
+      const input = {
+        cvdInfo: { cvdValue: { _text: "value2" } },
+      };
+      const expectedOutput = {
+        isSuccess: false,
+        code: undefined,
+        message: "ERROR",
+        data: {
+          cvdInfo: { cvdValue: "value2" },
+        },
+      };
+      expect(format(input)).toEqual(expectedOutput);
+    });
+
     it("should sanitize maskedPan in resolveData when sanitize is true", () => {
       const input = {
         resolveData: { maskedPan: { _text: "1234" } },
