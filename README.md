@@ -33,23 +33,10 @@ npm install moneryze
 
 ## Usage
 
-### Supported transactions
-
-The supported transactions are properly typed and matched to the official Moneris PHP examples shown [here](https://github.com/Moneris/eCommerce-Unified-API-PHP/tree/master/Examples/CA). Since the transactions' request and response are typed, they are manually reviewed and will be updated progressively overtime. These can be accessed via the `Moneryze` class directly (eg: `res_add_cc` can be accessed via `moneryze.resAddCC()`).
-
-View the table below for the official support.
-
-| Transaction    | Request Type      | Response Type      | Example                                                                         |
-| :------------- | :---------------- | :----------------- | :------------------------------------------------------------------------------ |
-| `res_add_cc`   | ResAddCCRequest   | ResAddCCResponse   | [link](https://github.com/wuon/moneryze/blob/main/examples/vault/resAddCC.ts)   |
-| `res_temp_add` | ResTempAddRequest | ResTempAddResponse | [link](https://github.com/wuon/moneryze/blob/main/examples/vault/resTempAdd.ts) |
-
-### Freeform
-
 The freeform usage allows developers to interface freely with the Moneris API. The developer is responsible for constructing the payload and providing the correct transaction type. Follow the example below to see it being performed on the `res_add_cc` transaction.
 
 > [!NOTE]
-> To see the full list of what can be interfaced, it is highly recommended you examine the integration guide from Moneris [here](https://github.com/Moneris/eCommerce-Unified-API-PHP/blob/master/Unified-API-IG-PHP-v1.6.3.pdf).
+> To see the full list of what can be interfaced, it is highly recommended you examine the integration guide from Moneris [here](https://developer.moneris.com/Documentation/NA/E-Commerce%20Solutions/API).
 
 ```typescript
 import { Moneryze } from "moneryze";

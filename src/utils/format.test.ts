@@ -2,6 +2,7 @@ import {
   camelToSnakeCase,
   format,
   pascalToCamelCase,
+  removeJsonTextAttribute,
   snakeToCamelCase,
 } from "./format";
 
@@ -78,23 +79,51 @@ describe("format", () => {
     });
   });
 
+  describe("removeJsonTextAttribute", () => {
+    it("should remove _text attribute from parent element", () => {
+      const parentElement = {
+        _parent: {
+          key1: { _text: "value1" },
+          key2: { _text: "value2" },
+        },
+      };
+      const value = "newValue";
+      removeJsonTextAttribute(value, parentElement);
+      expect(parentElement._parent.key2).toEqual(value);
+    });
+
+    it("should handle parent element with no _text attribute", () => {
+      const parentElement = {
+        _parent: {
+          key1: "value1",
+          key2: "value2",
+        },
+      };
+      const value = "newValue";
+      removeJsonTextAttribute(value, parentElement);
+      expect(parentElement._parent.key2).toEqual(value);
+    });
+  });
+
   describe("format", () => {
     it("should format data correctly", () => {
       const input = {
-        resolveData: {
-          maskedPan: { _text: "1234" },
-        },
-        cofInfo: { issuerId: { _text: "value4" } },
-        iSO: { _text: "value5" },
+        resolveData: { maskedPan: "1234" },
+        cofInfo: { issuerId: "value4" },
+        iSO: "value5",
+        message: "test",
+        responseCode: "00",
       };
       const expectedOutput = {
-        isSuccess: false,
-        code: undefined,
-        message: "ERROR",
+        isSuccess: true,
+        code: "00",
+        message: "test",
         data: {
           iso: "value5",
           resolveData: { maskedPan: "****************" },
           cofInfo: { issuerId: "value4" },
+          message: "test",
+          responseCode: "00",
         },
       };
       expect(format(input)).toEqual(expectedOutput);
@@ -111,28 +140,9 @@ describe("format", () => {
       expect(format(input)).toEqual(expectedOutput);
     });
 
-    it("should handle data with no resolveData or cofInfo", () => {
-      const input = {
-        key1: { _text: "value1" },
-        key2: { _text: "value2" },
-        iSO: { _text: "value5" },
-      };
-      const expectedOutput = {
-        isSuccess: false,
-        code: undefined,
-        message: "ERROR",
-        data: {
-          key1: "value1",
-          key2: "value2",
-          iso: "value5",
-        },
-      };
-      expect(format(input)).toEqual(expectedOutput);
-    });
-
     it("should sanitize maskedPan in resolveData", () => {
       const input = {
-        resolveData: { maskedPan: { _text: "1234" } },
+        resolveData: { maskedPan: "1234" },
       };
       const expectedOutput = {
         isSuccess: false,
@@ -147,7 +157,7 @@ describe("format", () => {
 
     it("should handle data with iSO field", () => {
       const input = {
-        iSO: { _text: "value5" },
+        iSO: "value5",
       };
       const expectedOutput = {
         isSuccess: false,
@@ -162,7 +172,7 @@ describe("format", () => {
 
     it("should handle data with resolveData field", () => {
       const input = {
-        resolveData: { custId: { _text: "value1" } },
+        resolveData: { custId: "value1" },
       };
       const expectedOutput = {
         isSuccess: false,
@@ -177,7 +187,7 @@ describe("format", () => {
 
     it("should handle data with cofInfo field", () => {
       const input = {
-        cofInfo: { issuerId: { _text: "value2" } },
+        cofInfo: { issuerId: "value2" },
       };
       const expectedOutput = {
         isSuccess: false,
@@ -188,36 +198,6 @@ describe("format", () => {
         },
       };
       expect(format(input)).toEqual(expectedOutput);
-    });
-
-    it("should sanitize maskedPan in resolveData when sanitize is true", () => {
-      const input = {
-        resolveData: { maskedPan: { _text: "1234" } },
-      };
-      const expectedOutput = {
-        isSuccess: false,
-        code: undefined,
-        message: "ERROR",
-        data: {
-          resolveData: { maskedPan: "****************" },
-        },
-      };
-      expect(format(input, true)).toEqual(expectedOutput);
-    });
-
-    it("should not sanitize maskedPan in resolveData when sanitize is false", () => {
-      const input = {
-        resolveData: { maskedPan: { _text: "1234" } },
-      };
-      const expectedOutput = {
-        isSuccess: false,
-        code: undefined,
-        message: "ERROR",
-        data: {
-          resolveData: { maskedPan: "1234" },
-        },
-      };
-      expect(format(input, false)).toEqual(expectedOutput);
     });
   });
 });

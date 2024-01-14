@@ -1,4 +1,4 @@
-// Reference: https://github.com/Moneris/eCommerce-Unified-API-PHP/blob/master/Examples/CA/TestResAddCC.php
+// Reference: https://github.com/Moneris/eCommerce-Unified-API-PHP/blob/master/Examples/CA/TestResAddToken.php
 
 import { Moneryze } from "../../src";
 
@@ -12,15 +12,21 @@ const moneryze = new Moneryze({
 });
 
 const main = async () => {
-  const result = await moneryze.send("res_add_cc", {
+  const resTempAddResult = await moneryze.send("res_temp_add", {
+    pan: "5454545454545454",
+    expdate: "1509",
+    duration: "900",
+    cryptType: "7",
+  });
+
+  const result = await moneryze.send("res_add_token", {
+    dataKey: resTempAddResult.data.dataKey ?? "ot-mtNKdu8NcxDoChqOJKZJZ1BOB",
     custId: "customer1",
     phone: "5555551234",
     email: "bob@smith.com",
     note: "this is my note",
-    pan: "4242424242424242",
-    expdate: "2212",
+    expdate: "1509",
     cryptType: "7",
-    dataKeyFormat: "0",
     avsInfo: {
       avsStreetNumber: "123",
       avsStreetName: "lakeshore blvd",
@@ -43,15 +49,14 @@ Example Response:
   code: '001',
   message: 'Successfully registered CC details.',
   data: {
-    dataKey: '3bPYFo1CWoQs9XwtZtclcPPy2',
+    dataKey: 'zDSsAB4VQuNXZMDeNVqc1jjx4',
     receiptId: 'null',
     referenceNum: 'null',
     responseCode: '001',
-    iSO: 'null',
     authCode: 'null',
     message: 'Successfully registered CC details.',
-    transTime: '02:37:26',
-    transDate: '2024-01-09',
+    transTime: '04:01:13',
+    transDate: '2024-01-12',
     transType: 'null',
     complete: 'true',
     transAmount: 'null',
@@ -74,9 +79,10 @@ Example Response:
       avsStreetName: 'lakeshore blvd',
       avsZipcode: '90210',
       maskedPan: '****************',
-      expdate: '2212',
+      expdate: '1509',
       cryptType: '7'
-    }
+    },
+    iso: 'null'
   }
 }
 
