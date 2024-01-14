@@ -24,6 +24,7 @@ import {
   pascalToCamelCase,
   camelToSnakeCase,
   snakeToCamelCase,
+  removeJsonTextAttribute,
 } from "./utils/format";
 
 export type MoneryzeConfig = {
@@ -181,6 +182,7 @@ export class Moneryze {
       compact: true,
       elementNameFn: (val) =>
         val.includes("_") ? snakeToCamelCase(val) : pascalToCamelCase(val),
+      textFn: removeJsonTextAttribute,
     }) as any;
 
     const receipt = Array.isArray(jsonResponse.response.receipt)
