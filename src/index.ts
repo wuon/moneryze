@@ -16,15 +16,9 @@ import {
 import {
   TransactionType,
   Country,
-  ResAddCCRequest,
-  ResAddCCResponse,
   Response,
-  ResTempAddRequest,
-  ResTempAddResponse,
-  ResAddTokenRequest,
-  ResAddTokenResponse,
-  ResCardVerificationCCRequest,
-  ResCardVerificationCCResponse,
+  RequestData,
+  ResponseData,
 } from "./types";
 import {
   pascalToCamelCase,
@@ -78,13 +72,16 @@ export class Moneryze {
    * });
    * ```
    */
-  async send(type: TransactionType, data: any): Promise<Response<any>> {
+  async send(
+    type: TransactionType,
+    data: RequestData | any
+  ): Promise<Response<ResponseData>> {
     const suffix = `${new Date().getTime()}-${Math.ceil(
       Math.random() * 10000
     )}`;
     const out = data;
     if (!filter.has(type)) {
-      out.crypt_type = data.crypt_type || this._config.cryptType;
+      out.crypt_type = data.cryptType || this._config.cryptType;
       out.order_id =
         out.order_id ||
         `${cleanse(
@@ -96,10 +93,10 @@ export class Moneryze {
       out.amount = 0.05;
       delete out.test;
     }
-    if (out.pan) {
+    if (data.pan) {
       out.pan = cleanse(data.pan, true);
     }
-    if (out.expdate) {
+    if (data.expdate) {
       out.expdate = cleanse(data.expdate, true);
     }
     if (out.description) {
@@ -191,27 +188,5 @@ export class Moneryze {
       : jsonResponse.response.receipt;
 
     return format(receipt, !sudo.has(type));
-  }
-
-  async resAddCC(data: ResAddCCRequest): Promise<Response<ResAddCCResponse>> {
-    return this.send("res_add_cc", data);
-  }
-
-  async resTempAdd(
-    data: ResTempAddRequest
-  ): Promise<Response<ResTempAddResponse>> {
-    return this.send("res_temp_add", data);
-  }
-
-  async resAddToken(
-    data: ResAddTokenRequest
-  ): Promise<Response<ResAddTokenResponse>> {
-    return this.send("res_add_token", data);
-  }
-
-  async resCardVerificationCC(
-    data: ResCardVerificationCCRequest
-  ): Promise<Response<ResCardVerificationCCResponse>> {
-    return this.send("res_card_verification_cc", data);
   }
 }

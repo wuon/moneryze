@@ -12,7 +12,7 @@ const moneryze = new Moneryze({
 });
 
 const main = async () => {
-  const result = await moneryze.resAddCC({
+  const result = await moneryze.send("res_add_cc", {
     custId: "customer1",
     phone: "5555551234",
     email: "bob@smith.com",

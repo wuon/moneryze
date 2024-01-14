@@ -12,14 +12,14 @@ const moneryze = new Moneryze({
 });
 
 const main = async () => {
-  const resTempAddResult = await moneryze.resTempAdd({
+  const resTempAddResult = await moneryze.send("res_temp_add", {
     pan: "5454545454545454",
     expdate: "1509",
     duration: "900",
     cryptType: "7",
   });
 
-  const result = await moneryze.resAddToken({
+  const result = await moneryze.send("res_add_token", {
     dataKey: resTempAddResult.data.dataKey ?? "ot-mtNKdu8NcxDoChqOJKZJZ1BOB",
     custId: "customer1",
     phone: "5555551234",

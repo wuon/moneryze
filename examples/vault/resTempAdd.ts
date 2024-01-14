@@ -12,7 +12,7 @@ const moneryze = new Moneryze({
 });
 
 const main = async () => {
-  const result = await moneryze.resTempAdd({
+  const result = await moneryze.send("res_temp_add", {
     pan: "5454545454545454",
     expdate: "1509",
     duration: "900",

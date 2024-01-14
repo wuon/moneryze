@@ -240,15 +240,44 @@ export type TransactionType =
   // Future proofing for new transaction types
   | string;
 
+export type Recur = {
+  recurUnit?: string;
+  startNow?: string;
+  startDate?: string;
+  numRecurs?: string;
+  period?: string;
+  recurAmount?: string;
+};
+
 export type CvdInfo = {
   cvdIndicator?: string;
   cvdValue?: string;
+};
+
+export type ConvFeeInfo = {
+  convenienceFee?: string;
 };
 
 export type CofInfo = {
   paymentIndicator?: string;
   paymentInformation?: string;
   issuerId?: string;
+};
+
+export type AchInfo = {
+  sec?: string;
+  custFirstName?: string;
+  custLastName?: string;
+  custAddress1?: string;
+  custAddress2?: string;
+  custCity?: string;
+  custState?: string;
+  custZip?: string;
+  routingNum?: string;
+  accountNum?: string;
+  checkNum?: string;
+  accountType?: string;
+  micr?: string;
 };
 
 export type AvsInfo = {
@@ -265,15 +294,35 @@ export type AvsInfo = {
   anc1?: string;
 };
 
-export type RequestData = ResAddCCRequest | ResTempAddRequest;
+export type RequestData = {
+  dataKey?: string;
+  orderId?: string;
+  amount?: string;
+  recur?: Recur;
+  cvdInfo?: CvdInfo;
+  custId?: string;
+  phone?: string;
+  email?: string;
+  note?: string;
+  pan?: string;
+  expdate?: string;
+  cryptType?: string;
+  dataKeyFormat?: string;
+  avsInfo?: AvsInfo;
+  cofInfo?: CofInfo;
+  duration?: string;
+  getNtResponse?: string;
+};
 
 export type ResponseData = {
+  achInfo?: AchInfo;
   authCode?: string;
   avsResultCode?: string;
   cardType?: string;
   cofInfo?: CofInfo;
   complete?: string;
   corporateCard?: string;
+  convFeeInfo?: ConvFeeInfo;
   cvdInfo?: CvdInfo;
   cvdResultCode?: string;
   dataKey?: string;
@@ -288,6 +337,7 @@ export type ResponseData = {
   paymentType?: string;
   receiptId?: string;
   referenceNum?: string;
+  recur?: Recur;
   recurSuccess?: string;
   resSuccess?: string;
   resolveData?: AvsInfo;
@@ -307,121 +357,3 @@ export type Response<T> = {
   message: string;
   data: T;
 };
-
-export type ResAddCCRequest = {
-  custId?: string;
-  phone?: string;
-  email?: string;
-  note?: string;
-  pan: string;
-  expdate: string;
-  cryptType?: string;
-  dataKeyFormat?: string;
-  avsInfo?: Pick<AvsInfo, "avsStreetName" | "avsStreetNumber" | "avsZipcode">;
-  cofInfo?: Pick<CofInfo, "issuerId">;
-};
-
-export type ResAddCCResponse = Pick<
-  ResponseData,
-  | "dataKey"
-  | "responseCode"
-  | "message"
-  | "transDate"
-  | "transTime"
-  | "complete"
-  | "timedOut"
-  | "resSuccess"
-  | "paymentType"
-  | "cofInfo"
-  | "resolveData"
->;
-
-export type ResTempAddRequest = {
-  pan: string;
-  expdate: string;
-  cryptType?: string;
-  // The duration, or lifetime, of the temporary token can be set to be a maximum of 15 minutes.
-  duration: string;
-  dataKeyFormat?: string;
-};
-
-export type ResTempAddResponse = Pick<
-  ResponseData,
-  | "dataKey"
-  | "responseCode"
-  | "message"
-  | "transDate"
-  | "transTime"
-  | "complete"
-  | "timedOut"
-  | "resSuccess"
-  | "paymentType"
-  | "resolveData"
->;
-
-export type ResAddTokenRequest = {
-  dataKey: string;
-  custId?: string;
-  phone?: string;
-  email?: string;
-  note?: string;
-  expdate?: string;
-  dataKeyFormat?: string;
-  cryptType?: string;
-  avsInfo?: Pick<AvsInfo, "avsStreetName" | "avsStreetNumber" | "avsZipcode">;
-  cofInfo?: Pick<CofInfo, "issuerId">;
-};
-
-export type ResAddTokenResponse = Pick<
-  ResponseData,
-  | "dataKey"
-  | "responseCode"
-  | "message"
-  | "transDate"
-  | "transTime"
-  | "complete"
-  | "timedOut"
-  | "resSuccess"
-  | "paymentType"
-  | "issuerId"
-  | "resolveData"
->;
-
-export type ResCardVerificationCCRequest = {
-  dataKey: string;
-  orderId?: string;
-  cryptType?: string;
-  expDate?: string;
-  getNtResponse?: string;
-  cvdInfo?: CvdInfo;
-  avsInfo?: Pick<AvsInfo, "avsStreetName" | "avsStreetNumber" | "avsZipcode">;
-  cofInfo?: CofInfo;
-};
-
-export type ResCardVerificationCCResponse = Pick<
-  ResponseData,
-  | "dataKey"
-  | "receiptId"
-  | "referenceNum"
-  | "responseCode"
-  | "authCode"
-  | "message"
-  | "transTime"
-  | "transDate"
-  | "complete"
-  | "transAmount"
-  | "cardType"
-  | "transId"
-  | "timedOut"
-  | "corporateCard"
-  | "recurSuccess"
-  | "avsResultCode"
-  | "cvdResultCode"
-  | "resSuccess"
-  | "paymentType"
-  | "isVisaDebit"
-  | "resolveData"
-  | "issuerId"
-  | "networkTokenization"
-  | "iso"
->;

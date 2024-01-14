@@ -12,16 +12,16 @@ const moneryze = new Moneryze({
 });
 
 const main = async () => {
-  const resAddCCResponse = await moneryze.resAddCC({
+  const resAddCCResponse = await moneryze.send("res_add_cc", {
     pan: "4242424242424242",
     expdate: "2212",
   });
 
-  const result = await moneryze.resCardVerificationCC({
+  const result = await moneryze.send("res_card_verification_cc", {
     dataKey: resAddCCResponse.data.dataKey ?? "",
     orderId: "Test-Purchase-1641766640000-1",
     cryptType: "7",
-    expDate: "2212",
+    expdate: "2212",
     getNtResponse: "true",
     cvdInfo: {
       cvdIndicator: "1",
